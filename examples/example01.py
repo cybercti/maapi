@@ -1,16 +1,18 @@
 # Native Imports
 from os import environ
 import logging
-
+from json import dumps
 # 3rd-Party Imports
 from mav4.v4client import MAV4
+from mav4.utils.cli import mati
 
-logging.basicConfig(filename=None, encoding='utf-8', level=logging.DEBUG)
+
+logging.basicConfig(filename=None, encoding='utf-8', level=logging.WARNING)
 
 username = environ['MAV4_USER']
 password = environ['MAV4_PASS']
 
 if __name__ == "__main__":
     client = MAV4(username, password)
-    malware = client.get_items("malware")
-    print(malware)
+    malware = client.get_items("malware", limit=5000)
+    print(dumps(malware))
