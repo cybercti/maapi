@@ -41,10 +41,12 @@ class MAV4:
             params = { "next": str(next_pointer) }
         else:
             params = {
-                "start_epoch": start,
-                "end_epoch": end,
                 "limit": limit,
             }
+            if start:
+                params["start_epoch"] = start.strftime('%s')
+            if end:
+                params["end_epoch"] = end.strftime('%s')
         response = self._session.get(url=url, headers=headers, params=params)
         return response
 
