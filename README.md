@@ -5,9 +5,9 @@ Unofficial and experimental python client for the Mandiant Advantage platform, s
 
 # Install
 ```
-git clone git@github.com:cybercti/mav4.git
+git clone https://github.com/cybercti/mav4.git
 cd mav4
-pip install .
+pip install -r requirements.txt .
 ```
 # Usage
 For the python module, the examples and the CLI, make sure to set your API keys as environment variables
