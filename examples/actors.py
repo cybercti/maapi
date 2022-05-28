@@ -5,7 +5,6 @@ from json import dumps
 
 # 3rd-Party Imports
 from mav4.v4client import MAV4
-from mav4.utils.cli import mati
 
 
 logging.basicConfig(filename=None, encoding='utf-8', level=logging.WARNING)
