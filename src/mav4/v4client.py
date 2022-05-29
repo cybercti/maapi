@@ -61,7 +61,7 @@ class MAV4:
             raise RuntimeError(response.text)
         return data
 
-    def search(self, query, limit=25):
+    def search(self, query, limit=25, next_pointer=None):
         url = "%s/v4/search" % (self.host)
         headers = {
             "Authorization": self.token,
@@ -69,10 +69,13 @@ class MAV4:
             "X-App-Name": "cybercti client",
             "content-type": "application/json",
         }
-        data = {
-            "limit": limit,
-            "search": query,
-        }
+        if next_pointer is not None:
+            data = { "next": str(next_pointer) }
+        else:
+            data = {
+                "limit": limit,
+                "search": query,
+            }
         response = self._session.post(url=url, headers=headers, json=data)
         return response.json()
 
