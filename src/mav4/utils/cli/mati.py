@@ -39,3 +39,15 @@ def download(limit, itemtype, start, end):
     items = client.get_items(itemtype, start=start_dt, end=end_dt, limit=limit)
     print(dumps(items))
 
+@mati.command('search')
+@click.option('--limit', default=25, help="Number of items to retrieve")
+@click.option('--query', help="Search query")
+def search(limit, query):
+    """
+    Search the CTI
+    """
+
+    client = MAV4(username, password)
+    items = client.search(query, limit=limit)
+    print(dumps(items))
+

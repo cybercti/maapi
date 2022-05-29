@@ -21,6 +21,7 @@ Check out the examples folder to see basic usage.
 ```
 python mav4/malwares.py
 python mav4/actors.py
+python mav4/search.py
 ```
 
 # CLI
@@ -54,10 +55,25 @@ Options:
   --help                          Show this message and exit.
 ```
 
+Search command is also available
+```
+mati search --help
+Usage: mati search [OPTIONS]
+
+  Search the CTI
+
+Options:
+  --limit INTEGER  Number of items to retrieve
+  --query TEXT     Search query
+  --help           Show this message and exit.
+```
+
+
 Examples of using the CLI to get data:
 ```
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype indicator
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype malware
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype actor
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype vulnerability
+mati search --limit 5 --query 8.8.8.8
 ```

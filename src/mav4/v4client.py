@@ -61,3 +61,18 @@ class MAV4:
             raise RuntimeError(response.text)
         return data
 
+    def search(self, query, limit=25):
+        url = "%s/v4/search" % (self.host)
+        headers = {
+            "Authorization": self.token,
+            "accept": "application/json",
+            "X-App-Name": "cybercti client",
+            "content-type": "application/json",
+        }
+        data = {
+            "limit": limit,
+            "search": query,
+        }
+        response = self._session.post(url=url, headers=headers, json=data)
+        return response.json()
+
