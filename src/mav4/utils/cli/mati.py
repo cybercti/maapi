@@ -41,7 +41,7 @@ def download(limit, itemtype, start, end):
 
 @mati.command('search')
 @click.option('--limit', default=25, help="Number of items to retrieve")
-@click.option('--query', help="Search query")
+@click.argument('query')
 def search(limit, query):
     """
     Search the CTI

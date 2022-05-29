@@ -75,5 +75,5 @@ mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype indicator
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype malware
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype actor
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype vulnerability
-mati search --limit 5 --query 8.8.8.8
+mati search --limit 5 8.8.8.8
 ```
