@@ -25,7 +25,10 @@ python mav4/search.py
 ```
 
 # CLI
+
 There is also a simple CLI to pull data from the Threat Intelligence API. The command is available as *mati*. Usage output and examples are below.
+
+## Usage
 ```
 mati --help
 Usage: mati [OPTIONS] COMMAND [ARGS]...
@@ -68,12 +71,22 @@ Options:
   --help           Show this message and exit.
 ```
 
+## Examples
 
-Examples of using the CLI to get data:
+Using the CLI to get data, outputs to stdout:
 ```
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype indicator
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype malware
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype actor
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype vulnerability
+```
+
+Download and save entries to disk rather than stdout
+``` 
+mati download --limit 50 --start 2022-04-01 --end 2022-04-02 --itemtype vulnerability --destdir tmp
+```
+
+Seach the data:
+```
 mati search --limit 5 8.8.8.8
 ```
