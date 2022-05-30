@@ -79,6 +79,7 @@ mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype indicator
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype malware
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype actor
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype vulnerability
+mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype reports
 ```
 
 Download and save entries to disk rather than stdout
