@@ -79,3 +79,13 @@ class MAV4:
         response = self._session.post(url=url, headers=headers, json=data)
         return response.json()
 
+    def get_detail(self,item_type, id):
+        url = "%s/v4/%s/%s" % (self.host, item_type, id)
+        headers = {
+            "Authorization": self.token,
+            "accept": "application/json",
+            "X-App-Name": "cybercti client",
+            "content-type": "application/json",
+        }
+        response = self._session.get(url=url, headers=headers)
+        return response.json()
