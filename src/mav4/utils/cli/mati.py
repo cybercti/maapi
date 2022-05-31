@@ -66,3 +66,66 @@ def search(limit, query):
     items = client.search(query, limit=limit)
     print(dumps(items))
 
+@mati.command('actor')
+@click.argument('actor')
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
+def search(actor, destdir):
+    """
+    Operations related to Actors
+    """
+
+    client = MAV4(username, password)
+    response = client.get_detail("actor", actor)
+    if destdir:
+        with open(path.join(destdir, actor + "-detailed.json"), "w") as outfile:
+            outfile.write(dumps(response, indent = 4))
+    else:
+        print(dumps(response, indent=4))
+
+@mati.command('malware')
+@click.argument('malware')
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
+def search(malware, destdir):
+    """
+    Operations related to Malware
+    """
+
+    client = MAV4(username, password)
+    response = client.get_detail("malware", malware)
+    if destdir:
+        with open(path.join(destdir, malware + "-detailed.json"), "w") as outfile:
+            outfile.write(dumps(response, indent = 4))
+    else:
+        print(dumps(response, indent=4))
+
+@mati.command('vuln')
+@click.argument('vuln')
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
+def search(vuln, destdir):
+    """
+    Operations related to Malware
+    """
+
+    client = MAV4(username, password)
+    response = client.get_detail("vulnerability", vuln)
+    if destdir:
+        with open(path.join(destdir, vuln + "-detailed.json"), "w") as outfile:
+            outfile.write(dumps(response, indent = 4))
+    else:
+        print(dumps(response, indent=4))
+
+@mati.command('indicator')
+@click.argument('indicator')
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
+def search(indicator, destdir):
+    """
+    Operations related to an Indicator
+    """
+
+    client = MAV4(username, password)
+    response = client.get_detail("indicator", indicator)
+    if destdir:
+        with open(path.join(destdir, indicator + "-detailed.json"), "w") as outfile:
+            outfile.write(dumps(response, indent = 4))
+    else:
+        print(dumps(response, indent=4))
