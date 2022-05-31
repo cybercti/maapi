@@ -33,8 +33,10 @@ def download(limit, itemtype, start, end, destdir):
     Download data
     """
     date_format = "%Y-%m-%d"
-    start_dt = datetime.strptime(start, date_format)
-    end_dt = datetime.strptime(end, date_format)
+    if start:
+        start = datetime.strptime(start, date_format)
+    if end:
+        end = datetime.strptime(end, date_format)
     # The results JSON contains a slightly different key than the requested item type.
     result_keys = {
         "actor": "threat-actors",
@@ -45,7 +47,7 @@ def download(limit, itemtype, start, end, destdir):
     }
 
     client = MAV4(username, password)
-    items = client.get_items(itemtype, start=start_dt, end=end_dt, limit=limit)
+    items = client.get_items(itemtype, start=start, end=end, limit=limit)
     if destdir:
         logger.debug("Writing to disk %s" % destdir)
         for item in items[result_keys[itemtype]]:
