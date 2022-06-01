@@ -24,7 +24,7 @@ def mati():
 
 @mati.command('download')
 @click.option('--limit', default=25, help="Number of items to retrieve")
-@click.option('--itemtype', type=click.Choice(['indicator', 'actor', 'malware', 'vulnerability', 'reports']), help='Item type to download')
+@click.option('--itemtype', type=click.Choice(['indicator', 'actor', 'malware', 'vulnerability', 'report']), help='Item type to download')
 @click.option('--start', help="Specify start time in the format 'YYYY-MM-DDTH:M:SZ'")
 @click.option('--end', help="Specify end time in the format 'YYYY-MM-DDTH:M:SZ'")
 @click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
@@ -43,7 +43,7 @@ def download(limit, itemtype, start, end, destdir):
         "indicator": "indicators",
         "malware": "malware",
         "vulnerability": "vulnerability",
-        "reports": "objects",
+        "report": "objects",
     }
 
     client = MAV4(username, password)
@@ -58,14 +58,25 @@ def download(limit, itemtype, start, end, destdir):
 
 @mati.command('search')
 @click.option('--limit', default=25, help="Number of items to retrieve")
+@click.option('--itemtype', default="all", type=click.Choice(['indicator', 'actor', 'malware', 'vulnerability', 'report']), help='Item type to download')
 @click.argument('query')
-def search(limit, query):
+def search(limit, itemtype, query):
     """
     Search the CTI
     """
+    # Keeping the CLI consistent, but the item_type in search is NOT consistent with the other type-specific endpoints.
+    # all threat-actor malware vulnerability indicator report
+    search_item_type = {
+        "actor": "threat-actor",
+        "indicator": "indicator",
+        "malware": "malware",
+        "vulnerability": "vulnerability",
+        "report": "report",
+        "all": "all",
+    }
 
     client = MAV4(username, password)
-    items = client.search(query, limit=limit)
+    items = client.search(query, item_type=search_item_type[itemtype], limit=limit)
     print(dumps(items))
 
 @mati.command('actor')
