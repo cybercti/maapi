@@ -142,3 +142,19 @@ def search(indicator, destdir):
             outfile.write(dumps(response, indent = 4))
     else:
         print(dumps(response, indent=4))
+
+@mati.command('report')
+@click.argument('report')
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
+def search(report, destdir):
+    """
+    Operations related to Reports
+    """
+
+    client = MAV4(username, password)
+    response = client.get_detail("report", report)
+    if destdir:
+        with open(path.join(destdir, report + "-detailed.json"), "w") as outfile:
+            outfile.write(dumps(response, indent = 4))
+    else:
+        print(dumps(response, indent=4))
