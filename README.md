@@ -90,13 +90,15 @@ mati download --limit 50 --start 2022-04-01 --end 2022-04-02 --itemtype vulnerab
 Search the data:
 ```
 mati search --limit 5 8.8.8.8
+mati search --limit 1 --itemtype indicator 8.8.8.8
 ```
 
-Object specific modules for more detailed results on a specific item (actor, malware, indicator, vuln).
+Object specific modules for more detailed results on a specific item (actor, malware, indicator, vuln, report).
 ```
 mati actor threat-actor--0cba715d-3d77-583d-8a07-ff63e480419e
 mati actor threat-actor--0cba715d-3d77-583d-8a07-ff63e480419e --destdir examples/tmp
 mati malware malware--51249602-4c6b-56a7-af93-239a770cda76
 mati indicator ipv4--d5a34595-ab0d-54c4-8abb-6407d3e25f8e
 mati vuln vulnerability--5d71741b-19cd-5f31-859c-f6e4534ab22d
+mati report 22-00008562
 ```
