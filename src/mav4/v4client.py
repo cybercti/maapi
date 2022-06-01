@@ -30,7 +30,7 @@ class MAV4:
         headers = { "content-type": "application/x-www-form-urlencoded" }
         return self._session.post(url=url, data=data, headers=headers, auth=auth).json()
 
-    def _retrieve(self, item_type, start=None, end=None, limit=25, next_pointer=None):
+    def _retrieve(self, item_type, start=None, end=None, limit=25, value=None, next_pointer=None):
         url = "%s/v4/%s" % (self.host, item_type)
         headers = {
             "Authorization": self.token,
@@ -43,15 +43,17 @@ class MAV4:
             params = {
                 "limit": limit,
             }
-            if start:
+            if start: # Supported by vuln, indicators and reports
                 params["start_epoch"] = start.strftime('%s')
-            if end:
+            if end: # Supported by vuln, indicators and reports
                 params["end_epoch"] = end.strftime('%s')
+            if value: # Supported by indicator
+                params["value"] = value
         response = self._session.get(url=url, headers=headers, params=params)
         return response
 
-    def get_items(self, item_type, start=None, end=None, limit=25, next_pointer=None):
-        response = self._retrieve(item_type, start, end, limit, next_pointer)
+    def get_items(self, item_type, start=None, end=None, limit=25, value=None, next_pointer=None):
+        response = self._retrieve(item_type, start, end, limit, value, next_pointer)
         if response.status_code == 200:
             data = response.json()
         elif response.status_code == 204:
@@ -61,7 +63,7 @@ class MAV4:
             raise RuntimeError(response.text)
         return data
 
-    def search(self, query, limit=25, next_pointer=None):
+    def search(self, query, item_type=None, limit=25, next_pointer=None):
         url = "%s/v4/search" % (self.host)
         headers = {
             "Authorization": self.token,
@@ -69,17 +71,18 @@ class MAV4:
             "X-App-Name": "cybercti client",
             "content-type": "application/json",
         }
-        if next_pointer is not None:
-            data = { "next": str(next_pointer) }
-        else:
-            data = {
-                "limit": limit,
-                "search": query,
-            }
+        data = {
+            "limit": limit,
+            "search": query,
+        }
+        if next_pointer:
+            data["next"] = str(next_pointer)
+        if item_type: # Currently undocumented parameter, filter results by: threat-actor malware vulnerability indicator report
+            data["type"] = item_type
         response = self._session.post(url=url, headers=headers, json=data)
         return response.json()
 
-    def get_detail(self,item_type, id):
+    def get_detail(self, item_type, id):
         url = "%s/v4/%s/%s" % (self.host, item_type, id)
         headers = {
             "Authorization": self.token,
