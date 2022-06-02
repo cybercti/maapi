@@ -130,12 +130,22 @@ def search(vuln, destdir):
 @mati.command('indicator')
 @click.argument('indicator')
 @click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
-def search(indicator, destdir):
+@click.option('--loosematch', '-l', is_flag=True, help="Return result even if not an exact match.")
+def search(indicator, destdir, loosematch):
     """
     Operations related to an Indicator
     """
-
     client = MAV4(username, password)
+
+    prefixes = ["md5--", "ipv4--", "fqdn--", "url--"]
+    lookup_needed = True
+    for prefix in prefixes:
+        if prefix in indicator:
+            lookup_needed = False
+            break
+    if lookup_needed:
+        indicator = client.id_lookup(indicator, "indicator", loose_match=loosematch)
+
     response = client.get_detail("indicator", indicator)
     if destdir:
         with open(path.join(destdir, indicator + "-detailed.json"), "w") as outfile:

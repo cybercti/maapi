@@ -102,3 +102,26 @@ mati indicator ipv4--d5a34595-ab0d-54c4-8abb-6407d3e25f8e
 mati vuln vulnerability--5d71741b-19cd-5f31-859c-f6e4534ab22d
 mati report 22-00008562
 ```
+
+Looking up by ID is limited in usefulness. Indicator lookups can also be done by value.
+
+```
+mati indicator 8.8.8.8
+mati indicator ddns.org
+mati indicator http://39.44.58.183:995
+mati indicator 6629090b695dc78e8ae5421ad4d0d25d
+```
+
+Use `--loosematch` to allow for non-exact matches, otherwise will throw an exception. The `sha256` needs a loosematch since the type for hash objects are always `md5`.
+```
+// Returns a result with something that contains xxxx
+mati indicator xxxx --loosematch
+
+mati indicator 84b4c0f12c30cc06bf8ba85b148a2c466ede9943919b2fb6232b77f98c3039dd --loosematch
+```
+
+But these will throw errors. 
+```
+mati indicator xxxx
+84b4c0f12c30cc06bf8ba85b148a2c466ede9943919b2fb6232b77f98c3039dd
+```

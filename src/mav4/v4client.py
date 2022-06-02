@@ -1,4 +1,5 @@
 # Native Import
+from ipaddress import ip_address
 from time import time
 import logging
 
@@ -52,6 +53,16 @@ class MAV4:
         response = self._session.get(url=url, headers=headers, params=params)
         return response
 
+    def _determine_type(self, value):
+        logging.warning("_determine_type is only partially implemented.")
+        try:
+            value = ip_address(value)
+            return "indicator"
+        except ValueError:
+            pass
+        actor_values = ["unc", "apt", "fin"]
+        return "malware"
+
     def get_items(self, item_type, start=None, end=None, limit=25, value=None, next_pointer=None):
         response = self._retrieve(item_type, start, end, limit, value, next_pointer)
         if response.status_code == 200:
@@ -92,3 +103,21 @@ class MAV4:
         }
         response = self._session.get(url=url, headers=headers)
         return response.json()
+
+    def id_lookup(self, value, item_type=None, loose_match=False):
+        if not item_type:
+            item_type = self._determine_type(value)
+        response = self.search(value, item_type=item_type, limit=1)["objects"]
+        if response:
+            if response[0]["value"] != value: # TODO: Document this hack somewhere. Currently, the first result is usually the most exact/relevant match.
+                error_message = "Expected %s but got %s" % (value, response[0]["value"])
+                if loose_match:
+                    logger.warning(error_message)
+                else:
+                    logger.error(error_message)
+                    raise ValueError(error_message)        
+            return response[0]["id"]
+        else:
+            error_message = "No id found for %s of item_type:  %s" % (value, item_type)
+            logger.error(error_message)
+            raise ValueError(error_message)
