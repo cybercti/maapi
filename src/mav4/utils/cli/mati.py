@@ -90,6 +90,7 @@ def search(actor, destdir):
     client = MAV4(username, password)
     response = client.get_detail("actor", actor)
     if destdir:
+        actor = response["id"] # Input can be APT, FIN, UNC or MA ID, Write to disk using the id
         with open(path.join(destdir, actor + "-detailed.json"), "w") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
@@ -106,6 +107,7 @@ def search(malware, destdir):
     client = MAV4(username, password)
     response = client.get_detail("malware", malware)
     if destdir:
+        malware = response["id"] # Input can be Malware name or MA ID, Write to disk using the id.
         with open(path.join(destdir, malware + "-detailed.json"), "w") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
@@ -116,12 +118,13 @@ def search(malware, destdir):
 @click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
 def search(vuln, destdir):
     """
-    Operations related to Malware
+    Operations related to Vulnerabilties
     """
 
     client = MAV4(username, password)
     response = client.get_detail("vulnerability", vuln)
     if destdir:
+        vuln = response["id"] # Input can be CVE or MA ID, Write to disk using the id
         with open(path.join(destdir, vuln + "-detailed.json"), "w") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
