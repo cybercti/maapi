@@ -93,6 +93,8 @@ mati search --limit 5 8.8.8.8
 mati search --limit 1 --itemtype indicator 8.8.8.8
 ```
 
+### Lookups on single items
+
 Object specific modules for more detailed results on a specific item (actor, malware, indicator, vuln, report).
 ```
 mati actor threat-actor--0cba715d-3d77-583d-8a07-ff63e480419e
@@ -103,25 +105,29 @@ mati vuln vulnerability--5d71741b-19cd-5f31-859c-f6e4534ab22d
 mati report 22-00008562
 ```
 
-Looking up by ID is limited in usefulness. Indicator lookups can also be done by value.
+Looking up by ID is limited in usefulness. Lookups can also be done by value.
 
 ```
 mati indicator 8.8.8.8
 mati indicator ddns.org
 mati indicator http://39.44.58.183:995
 mati indicator 6629090b695dc78e8ae5421ad4d0d25d
+mati vuln CVE-2022-1052
+mati actor APT26
+mati actor UNC1149
+mati malware THREEDOG
 ```
 
+### Indicator specific lookup options.
 Use `--loosematch` to allow for non-exact matches, otherwise will throw an exception. The `sha256` needs a loosematch since the type for hash objects are always `md5`.
 ```
 // Returns a result with something that contains xxxx
 mati indicator xxxx --loosematch
-
 mati indicator 84b4c0f12c30cc06bf8ba85b148a2c466ede9943919b2fb6232b77f98c3039dd --loosematch
 ```
 
 But these will throw errors. 
 ```
 mati indicator xxxx
-84b4c0f12c30cc06bf8ba85b148a2c466ede9943919b2fb6232b77f98c3039dd
+mati indicator 84b4c0f12c30cc06bf8ba85b148a2c466ede9943919b2fb6232b77f98c3039dd
 ```
