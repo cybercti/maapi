@@ -8,9 +8,9 @@ from json import dumps
 import click
 from mav4.v4client import MAV4
 
+logging.basicConfig(filename=None, encoding='utf-8', level=logging.WARNING)
 
 logger = logging.getLogger(__name__)
-
 username = environ['MAV4_USER']
 password = environ['MAV4_PASS']
 
@@ -53,6 +53,14 @@ def download(limit, itemtype, start, end, destdir):
         for item in items[result_keys[itemtype]]:
             with open(path.join(destdir, item["id"]+ ".json"), "w") as outfile:
                 outfile.write(dumps(item, indent = 4))
+        next = items.get("next", "")
+        while next:
+            logger.debug("Writing to disk %s with %s" % (destdir,next))
+            items = client.get_items(itemtype, limit=limit, next_pointer=next)
+            for item in items[result_keys[itemtype]]:
+                with open(path.join(destdir, item["id"]+ ".json"), "w") as outfile:
+                    outfile.write(dumps(item, indent = 4))
+            next = items.get("next", "")
     else:
         print(dumps(items))
 

@@ -73,7 +73,7 @@ Options:
 
 ## Examples
 
-Using the CLI to get data, outputs to stdout. The API only supports date ranges for indicators, vulns and reports:
+Using the CLI to get data, outputs to stdout. The API only supports date ranges for indicators, vulns and reports. By default, outputs to stdout but only the first page of data.
 ```
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype indicator
 mati download --limit 5 --start 2022-04-01 --end 2022-04-02 --itemtype vulnerability
@@ -82,9 +82,9 @@ mati download --limit 5 --itemtype malware
 mati download --limit 5 --itemtype actor
 ```
 
-Download and save entries to disk rather than stdout
+Download and save entries to disk rather than stdout. Saving to disk will paginate and save all of the entries between the date ranges.
 ``` 
-mati download --limit 50 --start 2022-04-01 --end 2022-04-02 --itemtype vulnerability --destdir tmp
+mati download --limit 50 --start 2022-04-01 --end 2022-04-02 --itemtype indicator --destdir tmp
 ```
 
 Search the data:
