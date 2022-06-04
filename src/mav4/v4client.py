@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 
 class MAV4:
 
+    APP_NAME = "cybercti client"
+
     def __init__(self, username=None, password=None, host="https://api.intelligence.fireeye.com"):
         self.username = username
         self.password = password
@@ -36,7 +38,7 @@ class MAV4:
         headers = {
             "Authorization": self.token,
             "accept": "application/json",
-            "X-App-Name": "cybercti client",
+            "X-App-Name": MAV4.APP_NAME,
         }
         if next_pointer is not None:
             params = { "next": str(next_pointer) }
@@ -79,7 +81,7 @@ class MAV4:
         headers = {
             "Authorization": self.token,
             "accept": "application/json",
-            "X-App-Name": "cybercti client",
+            "X-App-Name": MAV4.APP_NAME,
             "content-type": "application/json",
         }
         data = {
@@ -98,7 +100,7 @@ class MAV4:
         headers = {
             "Authorization": self.token,
             "accept": "application/json",
-            "X-App-Name": "cybercti client",
+            "X-App-Name": MAV4.APP_NAME,
             "content-type": "application/json",
         }
         response = self._session.get(url=url, headers=headers)
