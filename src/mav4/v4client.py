@@ -78,7 +78,7 @@ class MAV4:
         return response
 
     def _determine_type(self, value):
-        logging.warning("_determine_type is only partially implemented.")
+        logger.warning("_determine_type is only partially implemented.")
         try:
             value = ip_address(value)
             return "indicator"
