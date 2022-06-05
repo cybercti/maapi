@@ -20,19 +20,21 @@ class MAV4:
         self.password = password
         self.host = host
         self._session = Session()
-        if token is None:
-            self.token = self._auth()
-            self.token_expiration_time = time() + self.token["expires_in"]  # Stored as seconds since epoch as a float.
-        else:
-            self.token = token["token"]
-            self.token_expiration_time = token["token_expiration_time"]
-        logger.debug(self.token)
-        self.bearer_token = "Bearer %s" % self.token["access_token"]
         self._request_headers = {
-            "Authorization": self.bearer_token,
             "accept": "application/json",
             "X-App-Name": MAV4.APP_NAME,
         }
+        if token is None:
+            self._auth()
+        else:
+            self.token = token["token"]
+            self._update_auth_struct()
+            self.token_expiration_time = token["token_expiration_time"] # But override the expiration.
+
+    def _update_auth_struct(self):
+        self.token_expiration_time = time() + self.token["expires_in"]  # Stored as seconds since epoch as a float.
+        self.bearer_token = "Bearer %s" % self.token["access_token"]
+        self._request_headers["Authorization"] = self.bearer_token
 
     def _auth(self):
         """
@@ -42,7 +44,10 @@ class MAV4:
         url = "%s/token" % self.host
         data = { "grant_type": "client_credentials" }
         headers = { "content-type": "application/x-www-form-urlencoded" }
-        return self._session.post(url=url, data=data, headers=headers, auth=auth).json()
+        self.token = self._session.post(url=url, data=data, headers=headers, auth=auth).json()
+        self._update_auth_struct()
+        logger.debug(self.token)
+
 
     def _save_auth(self):
         token_file = path.expanduser("~/.mav4_token")
@@ -51,6 +56,14 @@ class MAV4:
 
     def _http_request(self, func, url, params=None, ** kwargs):
         # call the endpoint
+        token_time_left = self.token_expiration_time - time()
+        if token_time_left > 60: # 60 second buffer
+            logger.debug("There is still %.2f seconds left in the token" % token_time_left)
+        else:
+            logger.debug("Token expired, renewing Token.")
+            self._auth()
+            token_time_left = self.token_expiration_time - time()
+            logger.debug("Renewed. There is now %.2f seconds left in the token" % token_time_left)
         response = func(url, headers=self._request_headers, params=params, ** kwargs)
         return response
 
