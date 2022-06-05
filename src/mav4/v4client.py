@@ -13,14 +13,18 @@ class MAV4:
 
     APP_NAME = "cybercti client"
 
-    def __init__(self, username=None, password=None, host="https://api.intelligence.fireeye.com"):
+    def __init__(self, username=None, password=None, token=None, host="https://api.intelligence.fireeye.com"):
         self.username = username
         self.password = password
         self.host = host
         self._session = Session()
-        self.token = self._auth()
+        if token is None:
+            self.token = self._auth()
+            self.token_expiration_time = time() + self.token["expires_in"]  # Stored as seconds since epoch as a float.
+        else:
+            self.token = token["token"]
+            self.token_expiration_time = token["token_expiration_time"]
         logger.debug(self.token)
-        self.token_expiration_time = time() + self.token["expires_in"]  # Stored as seconds since epoch as a float.
         self.bearer_token = "Bearer %s" % self.token["access_token"]
         self._request_headers = {
             "Authorization": self.bearer_token,
