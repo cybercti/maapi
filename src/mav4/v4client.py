@@ -18,10 +18,10 @@ class MAV4:
         self.password = password
         self.host = host
         self._session = Session()
-        data_token = self._auth()
-        logger.debug(data_token)
-        self.token_expiration_time = time() + data_token["expires_in"]
-        self.token = "Bearer %s" % data_token["access_token"]
+        self.token = self._auth()
+        logger.debug(self.token)
+        self.token_expiration_time = time() + self.token["expires_in"]  # Stored as seconds since epoch as a float.
+        self.bearer_token = "Bearer %s" % self.token["access_token"]
 
     def _auth(self):
         """
@@ -36,7 +36,7 @@ class MAV4:
     def _retrieve(self, item_type, start=None, end=None, limit=25, value=None, next_pointer=None):
         url = "%s/v4/%s" % (self.host, item_type)
         headers = {
-            "Authorization": self.token,
+            "Authorization": self.bearer_token,
             "accept": "application/json",
             "X-App-Name": MAV4.APP_NAME,
         }
@@ -79,7 +79,7 @@ class MAV4:
     def search(self, query, item_type=None, limit=25, next_pointer=None):
         url = "%s/v4/search" % (self.host)
         headers = {
-            "Authorization": self.token,
+            "Authorization": self.bearer_token,
             "accept": "application/json",
             "X-App-Name": MAV4.APP_NAME,
             "content-type": "application/json",
@@ -98,7 +98,7 @@ class MAV4:
     def get_detail(self, item_type, id):
         url = "%s/v4/%s/%s" % (self.host, item_type, id)
         headers = {
-            "Authorization": self.token,
+            "Authorization": self.bearer_token,
             "accept": "application/json",
             "X-App-Name": MAV4.APP_NAME,
             "content-type": "application/json",
