@@ -22,6 +22,11 @@ class MAV4:
         logger.debug(self.token)
         self.token_expiration_time = time() + self.token["expires_in"]  # Stored as seconds since epoch as a float.
         self.bearer_token = "Bearer %s" % self.token["access_token"]
+        self._request_headers = {
+            "Authorization": self.bearer_token,
+            "accept": "application/json",
+            "X-App-Name": MAV4.APP_NAME,
+        }
 
     def _auth(self):
         """
@@ -33,13 +38,19 @@ class MAV4:
         headers = { "content-type": "application/x-www-form-urlencoded" }
         return self._session.post(url=url, data=data, headers=headers, auth=auth).json()
 
+    def _http_request(self, func, url, params=None, ** kwargs):
+        # call the endpoint
+        response = func(url, headers=self._request_headers, params=params, ** kwargs)
+        return response
+
+    def _http_get(self, * args, ** kwargs):
+        return self._http_request(self._session.get, * args, ** kwargs)
+
+    def _http_post(self, * args, ** kwargs):
+        return self._http_request(self._session.post, * args, ** kwargs)
+
     def _retrieve(self, item_type, start=None, end=None, limit=25, value=None, next_pointer=None):
         url = "%s/v4/%s" % (self.host, item_type)
-        headers = {
-            "Authorization": self.bearer_token,
-            "accept": "application/json",
-            "X-App-Name": MAV4.APP_NAME,
-        }
         if next_pointer is not None:
             params = { "next": str(next_pointer) }
         else:
@@ -52,7 +63,7 @@ class MAV4:
                 params["end_epoch"] = end.strftime('%s')
             if value: # Supported by indicator
                 params["value"] = value
-        response = self._session.get(url=url, headers=headers, params=params)
+        response = self._http_get(url=url, params=params)
         return response
 
     def _determine_type(self, value):
@@ -78,12 +89,6 @@ class MAV4:
 
     def search(self, query, item_type=None, limit=25, next_pointer=None):
         url = "%s/v4/search" % (self.host)
-        headers = {
-            "Authorization": self.bearer_token,
-            "accept": "application/json",
-            "X-App-Name": MAV4.APP_NAME,
-            "content-type": "application/json",
-        }
         data = {
             "limit": limit,
             "search": query,
@@ -92,18 +97,12 @@ class MAV4:
             data["next"] = str(next_pointer)
         if item_type: # Currently undocumented parameter, filter results by: threat-actor malware vulnerability indicator report
             data["type"] = item_type
-        response = self._session.post(url=url, headers=headers, json=data)
+        response = self._http_post(url=url, json=data)
         return response.json()
 
     def get_detail(self, item_type, id):
         url = "%s/v4/%s/%s" % (self.host, item_type, id)
-        headers = {
-            "Authorization": self.bearer_token,
-            "accept": "application/json",
-            "X-App-Name": MAV4.APP_NAME,
-            "content-type": "application/json",
-        }
-        response = self._session.get(url=url, headers=headers)
+        response = self._http_get(url=url)
         return response.json()
 
     def id_lookup(self, value, item_type=None, loose_match=False):
