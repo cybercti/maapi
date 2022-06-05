@@ -2,6 +2,8 @@
 from ipaddress import ip_address
 from time import time
 import logging
+from os import path
+from json import dumps
 
 # Third party imports
 from requests import Session
@@ -41,6 +43,11 @@ class MAV4:
         data = { "grant_type": "client_credentials" }
         headers = { "content-type": "application/x-www-form-urlencoded" }
         return self._session.post(url=url, data=data, headers=headers, auth=auth).json()
+
+    def _save_auth(self):
+        token_file = path.expanduser("~/.mav4_token")
+        with open(token_file, "w") as outfile:
+            outfile.write(dumps({"token": self.token, "token_expiration_time": self.token_expiration_time}, indent = 4))
 
     def _http_request(self, func, url, params=None, ** kwargs):
         # call the endpoint
