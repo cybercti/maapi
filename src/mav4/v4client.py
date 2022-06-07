@@ -81,7 +81,7 @@ class MAV4:
         return self._http_request(self._session.post, * args, ** kwargs)
 
     def _retrieve(self, item_type, start=None, end=None, limit=25, value=None, next_pointer=None):
-        url = "{self.host}/v4/{item_type}"
+        url = f"{self.host}/v4/{item_type}"
         if next_pointer is not None:
             params = { "next": str(next_pointer) }
         else:
