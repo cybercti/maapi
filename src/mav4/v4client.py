@@ -116,6 +116,8 @@ class MAV4:
         Optionally filter by item_type.
         Value can be specified if used with value of indicator.
         If next_pointer is specified, get the next page of results from a previous query.
+        Note: These results are NOT as detailed as the results would be if queried individually by ID.
+          Use get_detail() for more detailed information on an object.
         """
         response = self._retrieve(item_type, start, end, limit, value, next_pointer)
         if response.status_code == 200:
