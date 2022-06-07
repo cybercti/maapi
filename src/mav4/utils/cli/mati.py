@@ -1,3 +1,7 @@
+"""
+Mandiant Advantage Threat Intelligence CLI
+"""
+
 # Native Imports
 from os import environ, path
 import logging
@@ -90,65 +94,65 @@ def search(limit, itemtype, query):
     print(dumps(items))
 
 @mati.command('actor')
-@click.argument('actor')
+@click.argument('name')
 @click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
               help="If specified, output is written to disk, one result per file.")
-def actor(actor, destdir):
+def actor(name, destdir):
     """
     Operations related to Actors
     """
 
     client = MAV4(username, password)
-    response = client.get_detail("actor", actor)
+    response = client.get_detail("actor", name)
     if destdir:
-        actor = response["id"] # Input can be APT, FIN, UNC or MA ID, Write to disk using the id
-        with open(path.join(destdir, actor + "-detailed.json"), "w", encoding="utf-8") as outfile:
+        name = response["id"] # Input can be APT, FIN, UNC or MA ID, Write to disk using the id
+        with open(path.join(destdir, name + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
         print(dumps(response, indent=4))
 
 @mati.command('malware')
-@click.argument('malware')
+@click.argument('name')
 @click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
               help="If specified, output is written to disk, one result per file.")
-def malware(malware, destdir):
+def malware(name, destdir):
     """
     Operations related to Malware
     """
 
     client = MAV4(username, password)
-    response = client.get_detail("malware", malware)
+    response = client.get_detail("malware", name)
     if destdir:
-        malware = response["id"] # Input can be Malware name or MA ID, Write to disk using the id.
-        with open(path.join(destdir, malware + "-detailed.json"), "w", encoding="utf-8") as outfile:
+        name = response["id"] # Input can be Malware name or MA ID, Write to disk using the id.
+        with open(path.join(destdir, name + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
         print(dumps(response, indent=4))
 
 @mati.command('vuln')
-@click.argument('vuln')
+@click.argument('name')
 @click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
               help="If specified, output is written to disk, one result per file.")
-def vuln(vuln, destdir):
+def vuln(name, destdir):
     """
     Operations related to Vulnerabilties
     """
 
     client = MAV4(username, password)
-    response = client.get_detail("vulnerability", vuln)
+    response = client.get_detail("vulnerability", name)
     if destdir:
-        vuln = response["id"] # Input can be CVE or MA ID, Write to disk using the id
-        with open(path.join(destdir, vuln + "-detailed.json"), "w", encoding="utf-8") as outfile:
+        name = response["id"] # Input can be CVE or MA ID, Write to disk using the id
+        with open(path.join(destdir, name + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
         print(dumps(response, indent=4))
 
 @mati.command('indicator')
-@click.argument('indicator')
+@click.argument('name')
 @click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
               help="If specified, output is written to disk, one result per file.")
 @click.option('--loosematch', '-l', is_flag=True, help="Return result even if not an exact match.")
-def indicator(indicator, destdir, loosematch):
+def indicator(name, destdir, loosematch):
     """
     Operations related to an Indicator
     """
@@ -157,13 +161,13 @@ def indicator(indicator, destdir, loosematch):
     prefixes = ["md5--", "ipv4--", "fqdn--", "url--"]
     lookup_needed = True
     for prefix in prefixes:
-        if prefix in indicator:
+        if prefix in name:
             lookup_needed = False
             break
     if lookup_needed:
-        indicator = client.id_lookup(indicator, "indicator", loose_match=loosematch)
+        name = client.id_lookup(name, "indicator", loose_match=loosematch)
 
-    response = client.get_detail("indicator", indicator)
+    response = client.get_detail("indicator", name)
     if destdir:
         with open(path.join(destdir, indicator + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
@@ -171,18 +175,18 @@ def indicator(indicator, destdir, loosematch):
         print(dumps(response, indent=4))
 
 @mati.command('report')
-@click.argument('report')
+@click.argument('name')
 @click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
               help="If specified, output is written to disk, one result per file.")
-def report(report, destdir):
+def report(name, destdir):
     """
     Operations related to Reports
     """
 
     client = MAV4(username, password)
-    response = client.get_detail("report", report)
+    response = client.get_detail("report", name)
     if destdir:
-        with open(path.join(destdir, report + "-detailed.json"), "w", encoding="utf-8") as outfile:
+        with open(path.join(destdir, name + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
         print(dumps(response, indent=4))
