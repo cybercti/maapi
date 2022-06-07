@@ -27,7 +27,8 @@ def mati():
 @click.option('--itemtype', type=click.Choice(['indicator', 'actor', 'malware', 'vulnerability', 'report']), help='Item type to download')
 @click.option('--start', help="Specify start time in the format 'YYYY-MM-DDTH:M:SZ'")
 @click.option('--end', help="Specify end time in the format 'YYYY-MM-DDTH:M:SZ'")
-@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True,
+              writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
 def download(limit, itemtype, start, end, destdir):
     """
     Download data
@@ -49,24 +50,25 @@ def download(limit, itemtype, start, end, destdir):
     client = MAV4(username, password)
     items = client.get_items(itemtype, start=start, end=end, limit=limit)
     if destdir:
-        logger.debug("Writing to disk %s" % destdir)
+        logger.debug("Writing to disk %s", destdir)
         for item in items[result_keys[itemtype]]:
-            with open(path.join(destdir, item["id"]+ ".json"), "w") as outfile:
+            with open(path.join(destdir, item["id"]+ ".json"), "w", encoding="utf-8") as outfile:
                 outfile.write(dumps(item, indent = 4))
-        next = items.get("next", "")
+        next_pointer = items.get("next", "")
         while next:
-            logger.debug("Writing to disk %s with %s" % (destdir,next))
-            items = client.get_items(itemtype, limit=limit, next_pointer=next)
+            logger.debug("Writing to disk %s with %s", destdir, next_pointer)
+            items = client.get_items(itemtype, limit=limit, next_pointer=next_pointer)
             for item in items[result_keys[itemtype]]:
-                with open(path.join(destdir, item["id"]+ ".json"), "w") as outfile:
+                with open(path.join(destdir, item["id"]+ ".json"), "w", encoding="utf-8") as outfile:
                     outfile.write(dumps(item, indent = 4))
-            next = items.get("next", "")
+            next_pointer = items.get("next", "")
     else:
         print(dumps(items))
 
 @mati.command('search')
 @click.option('--limit', default=25, help="Number of items to retrieve")
-@click.option('--itemtype', default="all", type=click.Choice(['indicator', 'actor', 'malware', 'vulnerability', 'report']), help='Item type to download')
+@click.option('--itemtype', default="all", type=click.Choice(['indicator', 'actor', 'malware', 'vulnerability', 'report']),
+              help='Item type to download')
 @click.argument('query')
 def search(limit, itemtype, query):
     """
@@ -89,8 +91,9 @@ def search(limit, itemtype, query):
 
 @mati.command('actor')
 @click.argument('actor')
-@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
-def search(actor, destdir):
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
+              help="If specified, output is written to disk, one result per file.")
+def actor(actor, destdir):
     """
     Operations related to Actors
     """
@@ -99,15 +102,16 @@ def search(actor, destdir):
     response = client.get_detail("actor", actor)
     if destdir:
         actor = response["id"] # Input can be APT, FIN, UNC or MA ID, Write to disk using the id
-        with open(path.join(destdir, actor + "-detailed.json"), "w") as outfile:
+        with open(path.join(destdir, actor + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
         print(dumps(response, indent=4))
 
 @mati.command('malware')
 @click.argument('malware')
-@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
-def search(malware, destdir):
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
+              help="If specified, output is written to disk, one result per file.")
+def malware(malware, destdir):
     """
     Operations related to Malware
     """
@@ -116,15 +120,16 @@ def search(malware, destdir):
     response = client.get_detail("malware", malware)
     if destdir:
         malware = response["id"] # Input can be Malware name or MA ID, Write to disk using the id.
-        with open(path.join(destdir, malware + "-detailed.json"), "w") as outfile:
+        with open(path.join(destdir, malware + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
         print(dumps(response, indent=4))
 
 @mati.command('vuln')
 @click.argument('vuln')
-@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
-def search(vuln, destdir):
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
+              help="If specified, output is written to disk, one result per file.")
+def vuln(vuln, destdir):
     """
     Operations related to Vulnerabilties
     """
@@ -133,16 +138,17 @@ def search(vuln, destdir):
     response = client.get_detail("vulnerability", vuln)
     if destdir:
         vuln = response["id"] # Input can be CVE or MA ID, Write to disk using the id
-        with open(path.join(destdir, vuln + "-detailed.json"), "w") as outfile:
+        with open(path.join(destdir, vuln + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
         print(dumps(response, indent=4))
 
 @mati.command('indicator')
 @click.argument('indicator')
-@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
+              help="If specified, output is written to disk, one result per file.")
 @click.option('--loosematch', '-l', is_flag=True, help="Return result even if not an exact match.")
-def search(indicator, destdir, loosematch):
+def indicator(indicator, destdir, loosematch):
     """
     Operations related to an Indicator
     """
@@ -159,15 +165,16 @@ def search(indicator, destdir, loosematch):
 
     response = client.get_detail("indicator", indicator)
     if destdir:
-        with open(path.join(destdir, indicator + "-detailed.json"), "w") as outfile:
+        with open(path.join(destdir, indicator + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
         print(dumps(response, indent=4))
 
 @mati.command('report')
 @click.argument('report')
-@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True), help="If specified, output is written to disk, one result per file.")
-def search(report, destdir):
+@click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
+              help="If specified, output is written to disk, one result per file.")
+def report(report, destdir):
     """
     Operations related to Reports
     """
@@ -175,7 +182,7 @@ def search(report, destdir):
     client = MAV4(username, password)
     response = client.get_detail("report", report)
     if destdir:
-        with open(path.join(destdir, report + "-detailed.json"), "w") as outfile:
+        with open(path.join(destdir, report + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
         print(dumps(response, indent=4))
