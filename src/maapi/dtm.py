@@ -15,10 +15,8 @@ class DTM(MAAPI):
     APP_NAME = "cybercti client"
 
     def __init__(self, *args, **kwargs):
-        self.subtype = 'DTM'
-        self.object_id = 0
-        super(DTM, self).__init__(*args, **kwargs)
-        # super(*args, **kwargs)
+        self.sub_type = 'DTM'
+        super().__init__(*args, **kwargs)
 
     def get_monitor(self, monitor_id):
         """
