@@ -10,7 +10,7 @@ from json import dumps
 
 # 3rd-Party Imports
 import click
-from maapi.v4client import MAV4
+from maapi.mati import MAV4
 
 logging.basicConfig(filename=None, encoding='utf-8', level=logging.WARNING)
 
