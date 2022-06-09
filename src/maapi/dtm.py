@@ -23,3 +23,15 @@ class DTM(MAAPI):
         url = f"{self.host}/v4/dtm/monitors/{monitor_id}"
         response = self._http_get(url=url)
         return response.json()
+
+    def get_monitor_list(self, size=50):
+        """
+        Get a list of monitors
+        """
+        url = f"{self.host}/v4/dtm/monitors"
+        params = {
+            "size": size,
+        }
+        response = self._http_get(url=url, params=params)
+        return response.json()
+
