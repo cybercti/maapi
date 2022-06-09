@@ -12,8 +12,6 @@ class DTM(MAAPI):
     API client for Mandiant Advantage Digitial Threat Monitoring.
     """
 
-    APP_NAME = "cybercti client"
-
     def __init__(self, *args, **kwargs):
         self.sub_type = 'DTM'
         super().__init__(*args, **kwargs)
