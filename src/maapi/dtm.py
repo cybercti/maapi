@@ -51,3 +51,17 @@ class DTM(MAAPI):
             params["status"] = status
         response = self._http_get(url=url, params=params)
         return response.json()
+
+    def search_research_tools(self, query, size=25):
+        """
+        Search Research Tools
+        """
+        url = f"{self.host}/v4/dtm/docs/search"
+        params = {
+            "size": size,
+        }
+        data = {
+            "query": query
+        }
+        response = self._http_post(url=url, json=data, params=params)
+        return response.json()

@@ -29,6 +29,7 @@ python examples/search.py
 ## DTM related examples
 ```
 python examples/dtm.py
+python examples/research_tools.py
 ```
 
 # CLI
