@@ -35,3 +35,19 @@ class DTM(MAAPI):
         response = self._http_get(url=url, params=params)
         return response.json()
 
+    def get_alerts(self, size=25, status=None):
+        """
+        Get a list of monitors
+        """
+        url = f"{self.host}/v4/dtm/alerts"
+        params = {
+            "life": "10m",
+            "order": "desc",
+            "refs": "false",
+            "size": size,
+            "sort": "created_at"
+        }
+        if status:
+            params["status"] = status
+        response = self._http_get(url=url, params=params)
+        return response.json()

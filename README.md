@@ -18,10 +18,17 @@ export MAV4_PASS=4991...78
 
 # Examples
 Check out the examples folder to see basic usage.
+
+## MATI related examples
 ```
 python examples/malwares.py
 python examples/actors.py
 python examples/search.py
+```
+
+## DTM related examples
+```
+python examples/dtm.py
 ```
 
 # CLI
