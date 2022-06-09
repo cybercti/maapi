@@ -1,5 +1,5 @@
 # mav4
-MA V4 API
+MA API
 
 Unofficial and experimental python client for the Mandiant Advantage platform, starting with the Threat Intelligence endpoints.
 
@@ -19,9 +19,9 @@ export MAV4_PASS=4991...78
 # Examples
 Check out the examples folder to see basic usage.
 ```
-python mav4/malwares.py
-python mav4/actors.py
-python mav4/search.py
+python examples/malwares.py
+python examples/actors.py
+python examples/search.py
 ```
 
 # CLI

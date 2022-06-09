@@ -4,7 +4,7 @@ import logging
 from json import dumps
 
 # 3rd-Party Imports
-from mav4.v4client import MAV4
+from maapi.mati import MAV4
 
 
 logging.basicConfig(filename=None, encoding='utf-8', level=logging.DEBUG)
