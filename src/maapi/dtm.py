@@ -22,7 +22,8 @@ class DTM(MAAPI):
 
     def get_monitor(self, monitor_id):
         """
-        Get Monitor Details
+        Get the details of a given monitor_id.
         """
-        self.object_id = monitor_id
-        return self.object_id
+        url = f"{self.host}/v4/dtm/monitors/{monitor_id}"
+        response = self._http_get(url=url)
+        return response.json()
