@@ -71,7 +71,7 @@ def download(limit, itemtype, start, end, destdir):
 
 @mati.command('search')
 @click.option('--limit', default=25, help="Number of items to retrieve")
-@click.option('--itemtype', default="all", type=click.Choice(['indicator', 'actor', 'malware', 'vulnerability', 'report']),
+@click.option('--itemtype', default="all", type=click.Choice(['all', 'indicator', 'actor', 'malware', 'vulnerability', 'report']),
               help='Item type to download')
 @click.argument('query')
 def search(limit, itemtype, query):
