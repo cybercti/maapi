@@ -52,13 +52,16 @@ class DTM(MAAPI):
         response = self._http_get(url=url, params=params)
         return response.json()
 
-    def search_research_tools(self, query, size=25):
+    def search_research_tools(self, query, limit=25, doc_types=None, since=None, until=None):
         """
         Search Research Tools
         """
         url = f"{self.host}/v4/dtm/docs/search"
         params = {
-            "size": size,
+            "size": limit,
+            "doc_type": doc_types,
+            "since": since,
+            "until": until,
         }
         data = {
             "query": query
