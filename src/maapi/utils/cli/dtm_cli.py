@@ -35,7 +35,6 @@ def print_monitor_list(client: DTM, limit: int) -> None:
     """
     items = client.get_monitor_list(limit)
     logging.debug(dumps(items, indent=4))
-    print('cafvdt4d4k6sqiegfml0 ------  Credential Monitoring')
     print('┌───────────────────────────────────────────────────────────────┐')
     print('│ Monitor ID          |  Status  |  Name                        │')
     print('└───────────────────────────────────────────────────────────────┘')
