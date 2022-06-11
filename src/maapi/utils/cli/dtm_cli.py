@@ -29,16 +29,27 @@ def dtm(debug):
     else:
         logging.basicConfig(filename=None, encoding='utf-8', level=logging.WARNING)
 
-def print_monitor_list(client: DTM, limit: int) -> None:
+
+def get_print_monitors(client: DTM, limit: int=50, monitor_id: str = None):
     """
     Get and print a list of monitors
     """
-    items = client.get_monitor_list(limit)
-    logging.debug(dumps(items, indent=4))
+    if monitor_id:
+        items = []
+        items.append(client.get_monitor(monitor_id))
+        print_monitor_list(items)
+    else:
+        items = client.get_monitor_list(limit)
+        print_monitor_list(items['monitors'])
+
+def print_monitor_list(items) -> None:
+    """
+    Print a list of monitors
+    """
     print('┌───────────────────────────────────────────────────────────────┐')
     print('│ Monitor ID          |  Status  |  Name                        │')
     print('└───────────────────────────────────────────────────────────────┘')
-    for item in items['monitors']:
+    for item in items:
         statuses = ""
         if item['enabled']:
             statuses += "\U00002705"
@@ -58,11 +69,12 @@ def print_monitor_list(client: DTM, limit: int) -> None:
 @dtm.command('monitor')
 @click.argument('command', type=click.Choice(['list', 'activate', 'deactivate', 'delete']))
 @click.option('--limit', default=50, help="Number of items to retrieve")
-def monitor(command, limit):
+@click.option('--monitorid', help="Monitor ID to change.")
+def monitor(command, limit, monitorid):
     """
     Monitor related functionality
     """
 
     client = DTM(username, password)
     if command == 'list':
-        print_monitor_list(client, limit)
+        get_print_monitors(client, limit=limit, monitor_id=monitorid)
