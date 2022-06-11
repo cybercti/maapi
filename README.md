@@ -36,7 +36,7 @@ python examples/research_tools.py
 
 There is also a simple CLI to pull data from the Threat Intelligence API. The command is available as *mati*. Usage output and examples are below.
 
-## Usage
+## MATI Usage
 ```
 mati --help
 Usage: mati [OPTIONS] COMMAND [ARGS]...
@@ -79,7 +79,7 @@ Options:
   --help           Show this message and exit.
 ```
 
-## Examples
+### Examples
 
 Using the CLI to get data, outputs to stdout. The API only supports date ranges for indicators, vulns and reports. By default, outputs to stdout but only the first page of data.
 ```
@@ -101,7 +101,7 @@ mati search --limit 5 8.8.8.8
 mati search --limit 1 --itemtype indicator 8.8.8.8
 ```
 
-### Lookups on single items
+#### Lookups on single items
 
 Object specific modules for more detailed results on a specific item (actor, malware, indicator, vuln, report).
 ```
@@ -126,7 +126,7 @@ mati actor UNC1149
 mati malware THREEDOG
 ```
 
-### Indicator specific lookup options.
+#### Indicator specific lookup options.
 Use `--loosematch` to allow for non-exact matches, otherwise will throw an exception. The `sha256` needs a loosematch since the type for hash objects are always `md5`.
 ```
 // Returns a result with something that contains xxxx
@@ -138,4 +138,24 @@ But these will throw errors.
 ```
 mati indicator xxxx
 mati indicator 84b4c0f12c30cc06bf8ba85b148a2c466ede9943919b2fb6232b77f98c3039dd
+```
+
+## DTM Usage
+
+```
+Usage: dtm monitor [OPTIONS] {list|activate|deactivate|delete}
+
+  Monitor related functionality
+
+Options:
+  --help  Show this message and exit.
+```
+
+### Examples
+
+Monitor related examples:
+
+Get a list of the monitors with corresponding statuses for each.
+```
+dtm monitor list
 ```
