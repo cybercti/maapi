@@ -1,7 +1,7 @@
 # Native Imports
 from os import environ
 import logging
-
+from json import dumps
 # 3rd-Party Imports
 from maapi.dtm import DTM
 
@@ -13,11 +13,11 @@ password = environ['MAV4_PASS']
 
 if __name__ == "__main__":
     client = DTM(username, password)
-    resp = client.get_monitor_list(size=2)
+    resp = client.get_monitor_list(limit=2)
     monitor_id = resp['monitors'][0]['id']
     resp = client.get_monitor(monitor_id)
-    print(resp)
+    print(dumps(resp, indent=4))
     resp = client.get_alerts(1)
-    print(resp)
+    print(dumps(resp))
     resp = client.get_alerts(1, status="read")
-    print(resp)
+    print(dumps(resp))
