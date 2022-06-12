@@ -16,6 +16,26 @@ class DTM(MAAPI):
         self.sub_type = 'DTM'
         super().__init__(*args, **kwargs)
 
+    def get_email_settings(self):
+        """
+        Get the email settings for the organization.
+        """
+        url = f"{self.host}/v4/dtm/settings/email"
+        response = self._http_get(url=url)
+        return response.json()
+
+    def get_vocab_openapi(self):
+        """
+        Get the Open API spec for this REST API
+        """
+        headers = {
+            "accept": "text/yaml"
+        }
+        url = f"{self.host}/v4/dtm/vocab/openapi"
+        response = self._http_get(url=url, headers=headers)
+        return response
+
+
     def get_monitor(self, monitor_id):
         """
         Get the details of a given monitor_id.

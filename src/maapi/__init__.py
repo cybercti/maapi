@@ -62,7 +62,7 @@ class MAAPI(object):
         with open(token_file, "w", encoding="utf-8") as outfile:
             outfile.write(dumps({"token": self.token, "token_expiration_time": self.token_expiration_time}, indent = 4))
 
-    def _http_request(self, func, url, params=None, ** kwargs):
+    def _http_request(self, func, url, headers=None, ** kwargs):
         """
         Validate the Token is still valid, renewing as needed before
         passing on the request to the Python Requests Session.
@@ -72,11 +72,15 @@ class MAAPI(object):
         if token_time_left > 60: # 60 second buffer
             logger.debug("There is still %.2f seconds left in the token", token_time_left)
         else:
-            logger.debug("Token expired, renewing Token.")
+            logger.info("Token expired, renewing Token.")
             self._auth()
             token_time_left = self.token_expiration_time - time()
-            logger.debug("Renewed. There is now %.2f seconds left in the token", token_time_left)
-        response = func(url, headers=self._request_headers, params=params, ** kwargs)
+            logger.info("Token Renewed. There is now %.2f seconds left in the token", token_time_left)
+        if headers: # Support alternate headers, as some endpoints return text/yaml rather than JSON.
+            headers["Authorization"] = self._request_headers["Authorization"]
+            response = func(url, headers=headers, ** kwargs)
+        else:
+            response = func(url, headers=self._request_headers, ** kwargs)
 
         # Check the response before returning.
         try:
