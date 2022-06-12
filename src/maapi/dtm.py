@@ -1,5 +1,6 @@
 # Native Import
 import logging
+from typing import Dict
 
 
 # Local Imports
@@ -126,4 +127,12 @@ class DTM(MAAPI):
             "sanitize": sanitize,
         }
         response = self._http_get(url=url, params=params)
+        return response.json()
+
+    def get_forum_boards(self, forum_id) -> Dict:
+        """
+        Retrieve a list of Boards for a given forum_id
+        """
+        url = f"{self.host}/v4/dtm/views/forums/{forum_id}"
+        response = self._http_get(url=url)
         return response.json()
