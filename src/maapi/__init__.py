@@ -10,6 +10,7 @@ from ipaddress import ip_address
 # Third party imports
 from requests import Session
 from requests.auth import HTTPBasicAuth
+from requests.exceptions import HTTPError
 
 # Local Imports
 
@@ -76,6 +77,13 @@ class MAAPI(object):
             token_time_left = self.token_expiration_time - time()
             logger.debug("Renewed. There is now %.2f seconds left in the token", token_time_left)
         response = func(url, headers=self._request_headers, params=params, ** kwargs)
+
+        # Check the response before returning.
+        try:
+            response.raise_for_status()
+        except HTTPError as error:
+            logger.error('HTTP code of %i : Error in request (%s): %s', response.status_code, error, response.text)
+            # raise TODO: Determine if this should be raised, there might be legitimate non-200 codes that we need to pass on.
         return response
 
     def _http_get(self, * args, ** kwargs):
