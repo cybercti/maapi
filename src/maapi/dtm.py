@@ -113,3 +113,17 @@ class DTM(MAAPI):
         }
         response = self._http_post(url=url, json=data, params=params)
         return response.json()
+
+    def get_document(self, doc_id, doc_type, refs=False, truncate=None, sanitize=True):
+        """
+        Retrieve document by doc_id and doc_type.
+        Options to include the entities and classifiations (refs), optionally truncate the text and sanitize the HTML.
+        """
+        url = f"{self.host}/v4/dtm/docs/{doc_type}/{doc_id}"
+        params = {
+            "refs": refs,
+            "truncate": truncate,
+            "sanitize": sanitize,
+        }
+        response = self._http_get(url=url, params=params)
+        return response.json()

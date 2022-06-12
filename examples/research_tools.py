@@ -27,3 +27,8 @@ if __name__ == "__main__":
     resp = client.search_research_tools(query='cats', limit=1, since=since, until=until)
     print(f"Found {resp['total_docs']} but limited to {len(resp['docs'])}")
     print(dumps(resp, indent=4))
+    
+    document = resp["docs"][0]
+    resp = client.get_document(document["__id"], document["__type"], truncate=40)
+    print(dumps(resp, indent=4))
+
