@@ -12,7 +12,6 @@ from json import dumps
 import click
 from maapi.mati import MAV4
 
-logging.basicConfig(filename=None, encoding='utf-8', level=logging.WARNING)
 
 logger = logging.getLogger(__name__)
 username = environ['MAV4_USER']
@@ -20,10 +19,16 @@ password = environ['MAV4_PASS']
 
 
 @click.group()
-def mati():
+@click.option('--debug/--no-debug', default=False)
+def mati(debug):
     """
     MATI CLI of MAV4
     """
+    if debug:
+        logging.basicConfig(filename=None, encoding='utf-8', level=logging.DEBUG)
+        logger.debug('Debug is on')
+    else:
+        logging.basicConfig(filename=None, encoding='utf-8', level=logging.WARNING)
 
 
 @mati.command('download')
