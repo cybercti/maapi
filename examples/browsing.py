@@ -21,7 +21,3 @@ if __name__ == "__main__":
     print(f"Found {resp['total_docs']} but limited to {len(resp['docs'])}")
     print(dumps(resp, indent=4))
 
-    resp = client.get_forum_boards("dublikat_live")
-    print(dumps(resp, indent=4))
-    resp = client.get_forum_boards("forum_exploit_in")
-    print(dumps(resp, indent=4))
