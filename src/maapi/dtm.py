@@ -129,10 +129,21 @@ class DTM(MAAPI):
         response = self._http_get(url=url, params=params)
         return response.json()
 
-    def get_forum_boards(self, forum_id) -> Dict:
+    def get_forum_boards(self, forum_id:int) -> Dict:
         """
         Retrieve a list of Boards for a given forum_id
         """
         url = f"{self.host}/v4/dtm/views/forums/{forum_id}"
         response = self._http_get(url=url)
+        return response.json()
+
+    def get_forum_boards_threads(self, forum_id:int, board_name:int) -> Dict:
+        """
+        Retrieve a list of Threads for a given forum_id and board_name
+        """
+        url = f"{self.host}/v4/dtm/views/forums/{forum_id}/boards"
+        params = {
+            "board": board_name
+        }
+        response = self._http_get(url=url, params=params)
         return response.json()
