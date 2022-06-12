@@ -8,7 +8,7 @@ from json import dumps
 from ipaddress import ip_address
 
 # Third party imports
-from requests import Session
+from requests import Response, Session
 from requests.auth import HTTPBasicAuth
 from requests.exceptions import HTTPError
 
@@ -86,9 +86,11 @@ class MAAPI(object):
             # raise TODO: Determine if this should be raised, there might be legitimate non-200 codes that we need to pass on.
         return response
 
-    def _http_get(self, * args, ** kwargs):
+    def _http_get(self, * args, ** kwargs) -> Response:
         return self._http_request(self._session.get, * args, ** kwargs)
 
-    def _http_post(self, * args, ** kwargs):
+    def _http_post(self, * args, ** kwargs) -> Response:
         return self._http_request(self._session.post, * args, ** kwargs)
 
+    def _http_patch(self, * args, ** kwargs) -> Response:
+        return self._http_request(self._session.patch, * args, ** kwargs)
