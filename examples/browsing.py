@@ -17,7 +17,15 @@ if __name__ == "__main__":
 
 
     doc_types = ["forum_post"]
-    resp = client.search_research_tools(query='ssh', limit=10, doc_types=doc_types)
+    resp = client.search_research_tools(query='ssh', limit=1, doc_types=doc_types)
     print(f"Found {resp['total_docs']} but limited to {len(resp['docs'])}")
-    print(dumps(resp, indent=4))
+    document = resp["docs"][0]
+    forum_id = document["forum"]["id"]
+    board_name = document["board"]
+    print(dumps(document, indent=4))
 
+    resp = client.get_forum_boards(board_name)
+    print(dumps(document, indent=4))
+
+    resp = client.get_forum_boards_threads(forum_id, board_name)
+    print(dumps(resp, indent=4))
