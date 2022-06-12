@@ -35,6 +35,31 @@ class DTM(MAAPI):
         response = self._http_get(url=url, params=params)
         return response.json()
 
+    def _update_monitor_statuses(self, monitor_id, enabled=None, email_notify_enabled=None, email_notify_immediate=None):
+        """
+        Update one or more of the Monitor Status Fields
+        """
+        data = {
+            "enabled": enabled,
+            "email_notify_enabled": email_notify_enabled,
+            "email_notify_immediate": email_notify_immediate,
+        }
+        url = f"{self.host}/v4/dtm/monitors/{monitor_id}"
+        response = self._http_patch(url=url, json=data)
+        return response.json()
+
+    def enable_monitor(self, monitor_id):
+        """
+        Enable a Monitor
+        """
+        return self._update_monitor_statuses(monitor_id, enabled=True)
+
+    def disable_monitor(self, monitor_id):
+        """
+        Disable a Monitor
+        """
+        return self._update_monitor_statuses(monitor_id, enabled=False)
+
     def get_alerts(self, size=25, status=None, life="10m", order="desc", refs="false", sort="created_at", monitor_ids=None):
         """
         Get a list of monitors, optionally filtered by monitor_ids.

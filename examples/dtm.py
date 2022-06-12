@@ -2,6 +2,8 @@
 from os import environ
 import logging
 from json import dumps
+import sys
+
 # 3rd-Party Imports
 from maapi.dtm import DTM
 
@@ -13,6 +15,8 @@ password = environ['MAV4_PASS']
 
 if __name__ == "__main__":
     client = DTM(username, password)
+
+
     resp = client.get_monitor_list(limit=2)
     monitor_id = resp['monitors'][0]['id']
     resp = client.get_monitor(monitor_id)
@@ -21,3 +25,8 @@ if __name__ == "__main__":
     print(dumps(resp))
     resp = client.get_alerts(1, status="read")
     print(dumps(resp))
+
+    print("Skipping some examples as they cause data change, view the source to see the usage.")
+    sys.exit(0)
+    resp = client.disable_monitor(monitor_id)
+    resp = client.enable_monitor(monitor_id)
