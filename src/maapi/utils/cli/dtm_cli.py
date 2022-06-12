@@ -7,7 +7,6 @@ Mandiant Advantage Threat Intelligence CLI
 from os import environ
 import logging
 from json import dumps
-from xmlrpc.client import boolean
 
 # 3rd-Party Imports
 import click
