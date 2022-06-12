@@ -151,6 +151,19 @@ Options:
   --help  Show this message and exit.
 ```
 
+```
+Usage: dtm rtsearch [OPTIONS] QUERY
+
+  Search Research Tools
+
+Options:
+  --limit INTEGER  Number of items to retrieve
+  --doctypes TEXT  List of document types to filter on, separated by commas.
+  --start TEXT     Specify start time in the format 'YYYY-MM-DDTH:M:SZ'
+  --end TEXT       Specify end time in the format 'YYYY-MM-DDTH:M:SZ'
+  --help           Show this message and exit.
+```
+
 ### Examples
 
 Monitor related examples:
@@ -158,4 +171,13 @@ Monitor related examples:
 Get a list of the monitors with corresponding statuses for each.
 ```
 dtm monitor list
+```
+
+Research Tools
+Search examples
+
+```
+dtm rtsearch ssh
+dtm rtsearch ssh --limit 1 --doctypes forum_post,message,shop_listing,paste,web_content_publish
+dtm rtsearch ssh --limit 1 --start 2022-06-01T00:00:00Z --end 2022-06-02T00:00:00Z
 ```

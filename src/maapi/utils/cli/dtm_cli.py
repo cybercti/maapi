@@ -78,3 +78,19 @@ def monitor(command, limit, monitorid):
     client = DTM(username, password)
     if command == 'list':
         get_print_monitors(client, limit=limit, monitor_id=monitorid)
+
+@dtm.command('rtsearch')
+@click.argument('query')
+@click.option('--limit', default=50, help="Number of items to retrieve")
+@click.option('--doctypes', help="List of document types to filter on, separated by commas.")
+@click.option('--start', help="Specify start time in the format 'YYYY-MM-DDTH:M:SZ'")
+@click.option('--end', help="Specify end time in the format 'YYYY-MM-DDTH:M:SZ'")
+def rtsearch(query, limit, doctypes, start, end):
+    """
+    Search Research Tools
+    """
+    client = DTM(username, password)
+    if doctypes:
+        doctypes = doctypes.split(',')
+    resp = client.search_research_tools(query=query, limit=limit, doc_types=doctypes, since=start, until=end)
+    print(dumps(resp, indent=4))
