@@ -98,11 +98,11 @@ def rtsearch(query, limit, doctypes, start, end, truncate, output):
         doctypes = doctypes.split(',')
     resp = client.search_research_tools(query=query, limit=limit, doc_types=doctypes, since=start, until=end, truncate=truncate)
     if output == "preview":
-        print('┌──────────────────────────────────────────────────────────────────────────────┐')
-        print('│ Type              |  Summary                                                 │')
-        print('└──────────────────────────────────────────────────────────────────────────────┘')
+        print('┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐')
+        print('│ Type                |  Summary                                                                                             │')
+        print('└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘')
         for document in resp["docs"]:
-            print(f'  {document["__type"][:20]:20} ', end='')
+            print(f'  {document["__type"][:20]:20}   ', end='')
             print(_render_preview(document))
     elif output == "json":
         print(dumps(resp, indent=4))
