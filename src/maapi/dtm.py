@@ -98,7 +98,7 @@ class DTM(MAAPI):
         response = self._http_get(url=url, params=params)
         return response.json()
 
-    def search_research_tools(self, query, limit=25, doc_types=None, since=None, until=None):
+    def search_research_tools(self, query, limit=25, doc_types=None, since=None, until=None, truncate=None):
         """
         Search Research Tools
         """
@@ -108,6 +108,7 @@ class DTM(MAAPI):
             "doc_type": doc_types,
             "since": since,
             "until": until,
+            "truncate": truncate,
         }
         data = {
             "query": query
