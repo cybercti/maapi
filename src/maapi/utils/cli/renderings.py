@@ -17,6 +17,10 @@ def _render_preview_web_content_publish(document):
     text = document.get("text", "[[[ Empty text ]]]").replace('\n', ' -> ')
     return f'Title: {title:20}  Text: {text}'
 
+def _render_preview_forum_post(document):
+    body = document.get("body", "[[[ Empty body ]]]").replace('\n', ' -> ')
+    return f'Forum: {document["forum"]["name"]:15} Board: {document["board"][:30]:30} Body: {body[:20]}'
+
 
 
 def _render_preview(document, max_width:int=100):
@@ -26,4 +30,6 @@ def _render_preview(document, max_width:int=100):
         return _render_preview_paste(document)[:max_width]
     if document["__type"] == "web_content_publish":
         return _render_preview_web_content_publish(document)[:max_width]
+    if document["__type"] == "forum_post":
+        return _render_preview_forum_post(document)[:max_width]
     return dumps(document)[:max_width]
