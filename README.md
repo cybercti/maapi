@@ -157,11 +157,16 @@ Usage: dtm rtsearch [OPTIONS] QUERY
   Search Research Tools
 
 Options:
-  --limit INTEGER  Number of items to retrieve
-  --doctypes TEXT  List of document types to filter on, separated by commas.
-  --start TEXT     Specify start time in the format 'YYYY-MM-DDTH:M:SZ'
-  --end TEXT       Specify end time in the format 'YYYY-MM-DDTH:M:SZ'
-  --help           Show this message and exit.
+  --limit INTEGER          Number of items to retrieve
+  --doctypes TEXT          List of document types to filter on, separated by
+                           commas.
+  --start TEXT             Specify start time in the format 'YYYY-MM-
+                           DDTH:M:SZ'
+  --end TEXT               Specify end time in the format 'YYYY-MM-DDTH:M:SZ'
+  --truncate TEXT          Integer: Limit the response 'body' to a given
+                           length.
+  --output [preview|json]  Specify Output format
+  --help                   Show this message and exit.
 ```
 
 ### Examples
@@ -180,4 +185,10 @@ Search examples
 dtm rtsearch ssh
 dtm rtsearch ssh --limit 1 --doctypes forum_post,message,shop_listing,paste,web_content_publish
 dtm rtsearch ssh --limit 1 --start 2022-06-01T00:00:00Z --end 2022-06-02T00:00:00Z
+```
+
+Specify Different output options, default is `preview` view.
+```
+dtm rtsearch ssh --limit 10 --doctypes message,paste --truncate 50 --output preview
+dtm rtsearch ssh --limit 10 --doctypes message,paste --truncate 50 --output json
 ```

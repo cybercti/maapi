@@ -12,6 +12,9 @@ from json import dumps
 import click
 from maapi.dtm import DTM
 
+# Local Imports
+from .renderings import _render_preview
+
 logger = logging.getLogger(__name__)
 username = environ['MAV4_USER']
 password = environ['MAV4_PASS']
@@ -84,12 +87,22 @@ def monitor(command, limit, monitorid):
 @click.option('--doctypes', help="List of document types to filter on, separated by commas.")
 @click.option('--start', help="Specify start time in the format 'YYYY-MM-DDTH:M:SZ'")
 @click.option('--end', help="Specify end time in the format 'YYYY-MM-DDTH:M:SZ'")
-def rtsearch(query, limit, doctypes, start, end):
+@click.option('--truncate', default=None, help="Integer: Limit the response 'body' to a given length.")
+@click.option('--output', default="preview", type=click.Choice(['preview', 'json']), help="Specify Output format")
+def rtsearch(query, limit, doctypes, start, end, truncate, output):
     """
     Search Research Tools
     """
     client = DTM(username, password)
     if doctypes:
         doctypes = doctypes.split(',')
-    resp = client.search_research_tools(query=query, limit=limit, doc_types=doctypes, since=start, until=end)
-    print(dumps(resp, indent=4))
+    resp = client.search_research_tools(query=query, limit=limit, doc_types=doctypes, since=start, until=end, truncate=truncate)
+    if output == "preview":
+        print('┌──────────────────────────────────────────────────────────────────────────────┐')
+        print('│ Type              |  Summary                                                 │')
+        print('└──────────────────────────────────────────────────────────────────────────────┘')
+        for document in resp["docs"]:
+            print(f'  {document["__type"][:20]:20} ', end='')
+            print(_render_preview(document))
+    elif output == "json":
+        print(dumps(resp, indent=4))
