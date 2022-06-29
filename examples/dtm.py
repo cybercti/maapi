@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     resp = client.get_vocab_openapi()
     print(resp.text)
-    
+
     resp = client.get_monitor_list(limit=2)
     monitor_id = resp['monitors'][0]['id']
     resp = client.get_monitor(monitor_id)
