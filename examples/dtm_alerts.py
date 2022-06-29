@@ -1,8 +1,6 @@
 # Native Imports
 from os import environ
 import logging
-from json import dumps
-import sys
 
 # 3rd-Party Imports
 from maapi.dtm import DTM
