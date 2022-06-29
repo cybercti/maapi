@@ -20,4 +20,5 @@ if __name__ == "__main__":
     since = "2022-06-01T00:00:00.000Z"
     until = "2022-06-01T01:00:00.000Z"
     resp = client.get_alerts_all(size=5, since=since, until=until, monitor_ids=monitor_id)
-    print(resp)
+    num_alerts = len(resp["alerts"])
+    print(f"Found a total of {num_alerts} alerts for Monitor {monitor_id} from {since} to {until}")
