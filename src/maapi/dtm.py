@@ -2,6 +2,8 @@
 import logging
 from typing import Dict
 
+# 3rd-Party Imports
+from requests.models import parse_header_links
 
 # Local Imports
 from maapi import MAAPI
@@ -81,22 +83,58 @@ class DTM(MAAPI):
         """
         return self._update_monitor_statuses(monitor_id, enabled=False)
 
-    def get_alerts(self, size=25, status=None, life="10m", order="desc", refs="false", sort="created_at", monitor_ids=None):
+    def get_alerts(self, size:int=25, status:str=None, life:str="10m", order:str="desc", refs:str="false",
+                   sort:str="created_at", monitor_ids:str=None, since=None, until=None, truncate=None,
+                   alert_type=None, search=None, tags=None, sanitize="true", page=None) -> Dict:
         """
-        Get a list of monitors, optionally filtered by monitor_ids.
+        Get a list of alerts, optionally filtered by monitor_ids.
         """
         url = f"{self.host}/v4/dtm/alerts"
-        params = {
-            "size": size,
-            "status": status,
-            "life": life,
-            "order": order,
-            "refs": refs,
-            "sort": sort,
-            "monitor_id": monitor_ids
-        }
+        sort_enum = ["id", "created_at", "updated_at", "monitor_id"]
+        if page:
+            params = {"page": page}
+        else:
+            params = {
+                "size": size,
+                "status": status,
+                "life": life,
+                "order": order,
+                "refs": refs,
+                "sort": sort,
+                "monitor_id": monitor_ids,
+                "since": since,
+                "until": until,
+                "truncate": truncate,
+                "alert_type": alert_type,
+                "search": search,
+                "tags": tags,
+                "sanitize": sanitize,
+            }
         response = self._http_get(url=url, params=params)
+        if response.headers.get("Link", ""):
+            header = response.headers["Link"]
+            link_url = parse_header_links(header)[0]["url"] # This is a hack as python requests expects the key to be "links", not "Links"
+            page_value = link_url.split("page=")[1] # Grab the value after "page="
+            logger.debug("Detected more results are present %s", page_value)
+            response = response.json()
+            response["_maapi"] = {}
+            response["_maapi"]["next_page"] = page_value
+            return response
         return response.json()
+
+    def get_alerts_all(self, * args, ** kwargs) -> Dict:
+        """
+        Get all the alerts for a given query or timeframe.
+        """
+        alerts = []
+        resp = self.get_alerts(* args, ** kwargs)
+        alerts += resp["alerts"]
+        next_page = resp.get("_maapi", {}).get("next_page", None)
+        while next_page:
+            resp = self.get_alerts(page=next_page)
+            alerts += resp["alerts"]
+            next_page = resp.get("_maapi", {}).get("next_page", None)
+        return {"alerts": alerts}
 
     def search_research_tools(self, query, limit=25, doc_types=None, since=None, until=None, truncate=None):
         """
