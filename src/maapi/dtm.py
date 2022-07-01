@@ -19,7 +19,7 @@ class DTM(MAAPI):
         self.sub_type = 'DTM'
         super().__init__(*args, **kwargs)
 
-    def get_email_settings(self):
+    def get_email_settings(self) -> Dict:
         """
         Get the email settings for the organization.
         """
@@ -39,7 +39,7 @@ class DTM(MAAPI):
         return response
 
 
-    def get_monitor(self, monitor_id):
+    def get_monitor(self, monitor_id) -> Dict:
         """
         Get the details of a given monitor_id.
         """
@@ -47,18 +47,42 @@ class DTM(MAAPI):
         response = self._http_get(url=url)
         return response.json()
 
-    def get_monitor_list(self, limit=50):
+    def get_monitor_list(self, limit:int=100, page:str=None) -> Dict:
         """
         Get a list of monitors
         """
         url = f"{self.host}/v4/dtm/monitors"
-        params = {
-            "size": limit,
-        }
+        if page:
+            params = {"page": page}
+        else:
+            params = {"size": limit}
         response = self._http_get(url=url, params=params)
+        if response.headers.get("Link", ""):
+            header = response.headers["Link"]
+            link_url = parse_header_links(header)[0]["url"]
+            page_value = link_url.split("page=")[1]
+            logger.debug("Detected more results are present %s", page_value)
+            response = response.json()
+            response["_maapi"] = {}
+            response["_maapi"]["next_page"] = page_value
+            return response
         return response.json()
 
-    def _update_monitor_statuses(self, monitor_id, enabled=None, email_notify_enabled=None, email_notify_immediate=None):
+    def get_monitor_all(self, * args, ** kwargs) -> Dict:
+        """
+        Get all the monitors for a given query or timeframe.
+        """
+        monitors = []
+        resp = self.get_monitor_list(* args, ** kwargs)
+        monitors += resp["monitors"]
+        next_page = resp.get("_maapi", {}).get("next_page", None)
+        while next_page:
+            resp = self.get_monitor_list(page=next_page)
+            monitors += resp["monitors"]
+            next_page = resp.get("_maapi", {}).get("next_page", None)
+        return {"monitors": monitors}
+
+    def _update_monitor_statuses(self, monitor_id, enabled=None, email_notify_enabled=None, email_notify_immediate=None) -> Dict:
         """
         Update one or more of the Monitor Status Fields
         """
@@ -83,7 +107,23 @@ class DTM(MAAPI):
         """
         return self._update_monitor_statuses(monitor_id, enabled=False)
 
-    def get_alerts(self, size:int=25, status:str=None, life:str="10m", order:str="desc", refs:str="false",
+    def get_alert(self, alert_id:str) -> Dict:
+        """
+        Get the details of a given alert_id.
+        """
+        url = f"{self.host}/v4/dtm/alerts/{alert_id}"
+        response = self._http_get(url=url)
+        return response.json()
+
+    def get_stats(self) -> Dict:
+        """
+        Get the stats of DTM.
+        """
+        url = f"{self.host}/v4/dtm/alerts/stats"
+        response = self._http_get(url=url)
+        return response.json()
+
+    def get_alerts(self, size:int=100, status:str=None, life:str="10m", order:str="desc", refs:str="false",
                    sort:str="created_at", monitor_ids:str=None, since=None, until=None, truncate=None,
                    alert_type=None, search=None, tags=None, sanitize="true", page=None) -> Dict:
         """
