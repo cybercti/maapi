@@ -71,7 +71,7 @@ def print_monitor_list(items) -> None:
 
 
 @dtm.command('monitor')
-@click.argument('command', type=click.Choice(['list', 'activate', 'deactivate', 'delete']))
+@click.argument('command', type=click.Choice(['list', 'enable', 'disable']))
 @click.option('--limit', default=0, help="Number of items to retrieve, 0 for unlimited.")
 @click.option('--monitorid', help="Monitor ID to change.")
 def monitor(command, limit, monitorid):
@@ -82,6 +82,18 @@ def monitor(command, limit, monitorid):
     client = DTM(username, password)
     if command == 'list':
         get_print_monitors(client, limit=limit, monitor_id=monitorid)
+    elif command == 'enable':
+        if monitorid:
+            client.enable_monitor(monitor_id=monitorid)
+            get_print_monitors(client, limit=1, monitor_id=monitorid)
+        else:
+            print("--monitorid required when enabling or disabling a monitor")
+    elif command == 'disable':
+        if monitorid:
+            client.disable_monitor(monitor_id=monitorid)
+            get_print_monitors(client, limit=1, monitor_id=monitorid)
+        else:
+            print("--monitorid required when enabling or disabling a monitor")
 
 @dtm.command('rtsearch')
 @click.argument('query')
