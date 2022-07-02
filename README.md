@@ -143,12 +143,14 @@ mati indicator 84b4c0f12c30cc06bf8ba85b148a2c466ede9943919b2fb6232b77f98c3039dd
 ## DTM Usage
 
 ```
-Usage: dtm monitor [OPTIONS] {list|activate|deactivate|delete}
+Usage: dtm monitor [OPTIONS] {list|enable|disable}
 
   Monitor related functionality
 
 Options:
-  --help  Show this message and exit.
+  --limit INTEGER   Number of items to retrieve, 0 for unlimited.
+  --monitorid TEXT  Monitor ID to change.
+  --help            Show this message and exit.
 ```
 
 ```
@@ -176,6 +178,13 @@ Monitor related examples:
 Get a list of the monitors with corresponding statuses for each.
 ```
 dtm monitor list
+dtm monitor list --limit 2
+```
+
+Enable or disable a monitor
+```
+dtm monitor enable  --monitorid a9a9a9a9a9a9a9a9a9a9
+dtm monitor disable --monitorid a9a9a9a9a9a9a9a9a9a9
 ```
 
 Research Tools
