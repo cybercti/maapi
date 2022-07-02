@@ -32,17 +32,19 @@ def dtm(debug):
         logging.basicConfig(filename=None, encoding='utf-8', level=logging.WARNING)
 
 
-def get_print_monitors(client: DTM, limit: int=50, monitor_id: str = None):
+def get_print_monitors(client: DTM, limit: int=0, monitor_id: str = None):
     """
     Get and print a list of monitors
     """
     if monitor_id:
         items = []
         items.append(client.get_monitor(monitor_id))
-        print_monitor_list(items)
     else:
-        items = client.get_monitor_list(limit)
-        print_monitor_list(items['monitors'])
+        if limit > 0:
+            items = client.get_monitor_list(limit)['monitors']
+        else:
+            items = client.get_monitor_all()['monitors']
+    print_monitor_list(items)
 
 def print_monitor_list(items) -> None:
     """
@@ -70,7 +72,7 @@ def print_monitor_list(items) -> None:
 
 @dtm.command('monitor')
 @click.argument('command', type=click.Choice(['list', 'activate', 'deactivate', 'delete']))
-@click.option('--limit', default=50, help="Number of items to retrieve")
+@click.option('--limit', default=0, help="Number of items to retrieve, 0 for unlimited.")
 @click.option('--monitorid', help="Monitor ID to change.")
 def monitor(command, limit, monitorid):
     """
