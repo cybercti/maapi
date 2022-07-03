@@ -87,7 +87,7 @@ class MAAPI(object):
             response.raise_for_status()
         except HTTPError as error:
             logger.error('HTTP code of %i : Error in request (%s): %s', response.status_code, error, response.text)
-            # raise TODO: Determine if this should be raised, there might be legitimate non-200 codes that we need to pass on.
+            raise # TODO: Determine if this should be raised, there might be legitimate non-200 codes that we need to pass on.
         return response
 
     def _http_get(self, * args, ** kwargs) -> Response:
