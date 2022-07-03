@@ -1,8 +1,9 @@
 # Native Import
 import logging
-from typing import Dict
+from typing import Dict, List
 
 # 3rd-Party Imports
+from requests import Response
 from requests.models import parse_header_links
 
 # Local Imports
@@ -19,6 +20,23 @@ class DTM(MAAPI):
         self.sub_type = 'DTM'
         super().__init__(*args, **kwargs)
 
+    @staticmethod
+    def _extract_headers(response:Response) -> Dict:
+        """
+        Helper function to extract the Link header within a Response object and embeds the value
+        in the Dict under a '_maapi' Key
+        """
+        if response.headers.get("Link", ""):
+            header = response.headers["Link"]
+            link_url = parse_header_links(header)[0]["url"]
+            page_value = link_url.split("page=")[1]
+            logger.debug("Detected more results are present %s", page_value)
+            response = response.json()
+            response["_maapi"] = {}
+            response["_maapi"]["next_page"] = page_value
+            return response
+        return response.json()
+    
     def get_email_settings(self) -> Dict:
         """
         Get the email settings for the organization.
@@ -57,16 +75,7 @@ class DTM(MAAPI):
         else:
             params = {"size": limit}
         response = self._http_get(url=url, params=params)
-        if response.headers.get("Link", ""):
-            header = response.headers["Link"]
-            link_url = parse_header_links(header)[0]["url"]
-            page_value = link_url.split("page=")[1]
-            logger.debug("Detected more results are present %s", page_value)
-            response = response.json()
-            response["_maapi"] = {}
-            response["_maapi"]["next_page"] = page_value
-            return response
-        return response.json()
+        return self._extract_headers(response)
 
     def get_monitor_all(self, * args, ** kwargs) -> Dict:
         """
@@ -151,16 +160,7 @@ class DTM(MAAPI):
                 "sanitize": sanitize,
             }
         response = self._http_get(url=url, params=params)
-        if response.headers.get("Link", ""):
-            header = response.headers["Link"]
-            link_url = parse_header_links(header)[0]["url"] # This is a hack as python requests expects the key to be "links", not "Links"
-            page_value = link_url.split("page=")[1] # Grab the value after "page="
-            logger.debug("Detected more results are present %s", page_value)
-            response = response.json()
-            response["_maapi"] = {}
-            response["_maapi"]["next_page"] = page_value
-            return response
-        return response.json()
+        return self._extract_headers(response)
 
     def get_alerts_all(self, * args, ** kwargs) -> Dict:
         """
@@ -176,7 +176,7 @@ class DTM(MAAPI):
             next_page = resp.get("_maapi", {}).get("next_page", None)
         return {"alerts": alerts}
 
-    def search_research_tools(self, query, limit=25, doc_types=None, since=None, until=None, truncate=None):
+    def search_research_tools(self, query:str=None, limit:int=100, doc_types:List=None, since:str=None, until:str=None, truncate:int=None, page:str=None) -> Dict:
         """
         Search Research Tools
         """
@@ -187,12 +187,32 @@ class DTM(MAAPI):
             "since": since,
             "until": until,
             "truncate": truncate,
+            "page": page,
         }
         data = {
             "query": query
         }
         response = self._http_post(url=url, json=data, params=params)
-        return response.json()
+        return self._extract_headers(response)
+
+    def search_research_tools_all(self, * args, ** kwargs) -> Dict:
+        """
+        Get all the search results for a given query or timeframe.
+        """
+        results = []
+        resp = self.search_research_tools(* args, ** kwargs)
+        results += resp["docs"]
+        logger.debug("Current count of docs retrieved is %i", len(results))
+        next_page = resp.get("_maapi", {}).get("next_page", None)
+        # NOTE: This is needed since the search endpoint always expects a query, even with a page reference. Otherwise 415 HTTP error
+        kwargs["page"] = next_page
+        while next_page:
+            resp = self.search_research_tools(* args, ** kwargs)
+            results += resp["docs"]
+            logger.debug("Current count of docs retrieved is %i", len(results))
+            next_page = resp.get("_maapi", {}).get("next_page", None)
+            kwargs["page"] = next_page
+        return {"docs": results}
 
     def get_document(self, doc_id, doc_type, refs=False, truncate=None, sanitize=True):
         """
