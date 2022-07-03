@@ -33,6 +33,9 @@ if __name__ == "__main__":
     resp = client.get_email_settings()
     print(dumps(resp, indent=4))
 
+    resp = client.get_stats()
+    print(dumps(resp, indent=4))
+
     print("Skipping some examples as they cause data change, view the source to see the usage.")
     sys.exit(0)
     resp = client.disable_monitor(monitor_id)
