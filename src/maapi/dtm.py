@@ -116,12 +116,16 @@ class DTM(MAAPI):
         """
         return self._update_monitor_statuses(monitor_id, enabled=False)
 
-    def get_alert(self, alert_id:str) -> Dict:
+    def get_alert(self, alert_id:str, truncate:int=None, sanitize:str="true") -> Dict:
         """
-        Get the details of a given alert_id.
+        Get the details of a given alert_id, optionally truncating or sanitizing.
         """
         url = f"{self.host}/v4/dtm/alerts/{alert_id}"
-        response = self._http_get(url=url)
+        params = {
+            "truncate": truncate,
+            "sanitize": sanitize,
+        }
+        response = self._http_get(url=url, params=params)
         return response.json()
 
     def get_stats(self) -> Dict:
