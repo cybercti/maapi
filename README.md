@@ -5,9 +5,7 @@ Unofficial and experimental python client for the Mandiant Advantage platform, s
 
 # Install
 ```
-git clone https://github.com/cybercti/maapi.git
-cd maapi
-pip install .
+pip install git+https://github.com/cybercti/maapi.git
 ```
 
 Or use the older setuptools method. **Warning: Deprecated**
