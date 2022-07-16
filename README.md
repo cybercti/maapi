@@ -12,6 +12,8 @@ pip install .
 
 Or use the older setuptools method. **Warning: Deprecated**
 ```
+git clone https://github.com/cybercti/maapi.git
+cd maapi
 python setup.py install
 ```
 
