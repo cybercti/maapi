@@ -7,8 +7,22 @@ Unofficial and experimental python client for the Mandiant Advantage platform, s
 ```
 git clone https://github.com/cybercti/maapi.git
 cd maapi
-pip install -r requirements.txt .
+pip install .
 ```
+
+Or use the older setuptools method. **Warning: Deprecated**
+```
+python setup.py install
+```
+
+## Install - Development envirornment
+Use `-e` to install project in `editable` mode for local development (i.e. setuptools "develop mode")
+```
+git clone https://github.com/cybercti/maapi.git
+cd maapi
+pip install -e .
+```
+
 # Usage
 For the python module, the examples and the CLI, make sure to set your API keys as environment variables
 ```
