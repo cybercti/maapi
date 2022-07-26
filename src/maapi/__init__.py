@@ -52,10 +52,16 @@ class MAAPI(object):
         url = f"{self.host}/token"
         data = { "grant_type": "client_credentials" }
         headers = { "content-type": "application/x-www-form-urlencoded" }
-        self.token = self._session.post(url=url, data=data, headers=headers, auth=auth).json()
+        response = self._session.post(url=url, data=data, headers=headers, auth=auth)
+        # Check the response before returning. TODO: Likely should be included as a part of a larger Exception set maintained in this module.
+        try:
+            response.raise_for_status()
+        except HTTPError as error:
+            logger.error('HTTP code of %i : Error in request (%s): %s', response.status_code, error, response.text)
+            raise
+        self.token = response.json()
         self._update_auth_struct()
         logger.debug(self.token)
-
 
     def _save_auth(self):
         token_file = path.expanduser("~/.mav4_token")
