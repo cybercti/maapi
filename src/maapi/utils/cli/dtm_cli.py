@@ -13,7 +13,7 @@ import click
 from maapi.dtm import DTM
 
 # Local Imports
-from .renderings import _render_preview
+from .dtm_renderings import _render_preview
 
 logger = logging.getLogger(__name__)
 username = environ['MAV4_USER']
