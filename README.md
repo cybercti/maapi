@@ -52,45 +52,54 @@ There is also a simple CLI to pull data from the Threat Intelligence API. The co
 
 ## MATI Usage
 ```
-mati --help
 Usage: mati [OPTIONS] COMMAND [ARGS]...
 
   MATI CLI of MAV4
 
 Options:
-  --help  Show this message and exit.
+  --debug / --no-debug
+  --help                Show this message and exit.
 
 Commands:
-  download  Download data
+  actor      Operations related to Actors
+  download   Download data
+  indicator  Operations related to an Indicator
+  malware    Operations related to Malware
+  report     Operations related to Reports
+  search     Search the CTI
+  vuln       Operations related to Vulnerabilties
 ```
 
 The Download command is the first available command
 ```
-mati download --help
 Usage: mati download [OPTIONS]
 
   Download data
 
 Options:
   --limit INTEGER                 Number of items to retrieve
-  --itemtype [indicator|actor|malware|vulnerability]
+  --itemtype [indicator|actor|malware|vulnerability|report]
                                   Item type to download
-  --start TEXT                    Specify start time in the format 'YYYY-MM-DD'
-  --end TEXT                      Specify end time in the format 'YYYY-MM-DD'
+  --start TEXT                    Specify start time in the format 'YYYY-MM-
+                                  DDTH:M:SZ'
+  --end TEXT                      Specify end time in the format 'YYYY-MM-
+                                  DDTH:M:SZ'
+  --destdir DIRECTORY             If specified, output is written to disk, one
+                                  result per file.
   --help                          Show this message and exit.
 ```
 
 Search command is also available
 ```
-mati search --help
-Usage: mati search [OPTIONS]
+Usage: mati search [OPTIONS] QUERY
 
   Search the CTI
 
 Options:
-  --limit INTEGER  Number of items to retrieve
-  --query TEXT     Search query
-  --help           Show this message and exit.
+  --limit INTEGER                 Number of items to retrieve
+  --itemtype [all|indicator|actor|malware|vulnerability|report]
+                                  Item type to download
+  --help                          Show this message and exit.
 ```
 
 ### Examples
