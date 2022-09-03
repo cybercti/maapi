@@ -21,7 +21,7 @@ class MAAPI(object):
     API client for Mandiant Advantage API
     """
 
-    APP_NAME = "cybercti client"
+    APP_NAME = "MAAPI client github.com/cybercti/maapi"
 
     def __init__(self, username=None, password=None, token=None, host="https://api.intelligence.fireeye.com"):
         self.username = username

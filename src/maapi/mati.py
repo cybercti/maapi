@@ -12,7 +12,7 @@ class MAV4(MAAPI):
     API client for Mandiant Advantage API v4 (MATI)
     """
 
-    APP_NAME = "cybercti client"
+    APP_NAME = "MAAPI client github.com/cybercti/maapi"
 
     def __init__(self, *args, **kwargs):
         self.sub_type = 'MATI'
