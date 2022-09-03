@@ -12,6 +12,8 @@ from json import dumps
 import click
 from maapi.mati import MAV4
 
+# Local Imports
+from .mati_renderings import _render_preview
 
 logger = logging.getLogger(__name__)
 username = environ['MAV4_USER']
@@ -183,7 +185,8 @@ def indicator(name, destdir, loosematch):
 @click.argument('name')
 @click.option('--destdir', type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True),
               help="If specified, output is written to disk, one result per file.")
-def report(name, destdir):
+@click.option('--output', default="preview", type=click.Choice(['preview', 'json']), help="Specify Output format")
+def report(name, destdir, output):
     """
     Operations related to Reports
     """
@@ -194,4 +197,11 @@ def report(name, destdir):
         with open(path.join(destdir, name + "-detailed.json"), "w", encoding="utf-8") as outfile:
             outfile.write(dumps(response, indent = 4))
     else:
-        print(dumps(response, indent=4))
+        if output == "preview":
+            print('┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐')
+            print('|                                                                                                                                                          |')
+            print(_render_preview('report', response))
+            print('|                                                                                                                                                          |')
+            print('└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘')
+        elif output == "json":
+            print(dumps(response, indent=4))
