@@ -180,7 +180,7 @@ class DTM(MAAPI):
             next_page = resp.get("_maapi", {}).get("next_page", None)
         return {"alerts": alerts}
 
-    def search_research_tools(self, query:str=None, limit:int=100, doc_types:List=None, since:str=None, until:str=None, truncate:int=None, page:str=None) -> Dict:
+    def search_research_tools(self, query:str=None, limit:int=25, doc_types:List=None, since:str=None, until:str=None, truncate:int=None, page:str=None) -> Dict:
         """
         Search Research Tools
         """
