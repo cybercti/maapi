@@ -120,3 +120,27 @@ def rtsearch(query, limit, doctypes, start, end, truncate, output):
             print(_render_preview(document))
     elif output == "json":
         print(dumps(resp, indent=4))
+
+@dtm.command('cards')
+@click.argument('bin_list') # , help="List of BINs to filter on, separated by commas."
+@click.option('--limit', default=25, help="Number of items to retrieve, use 0 to retrieve all.")
+@click.option('--start', help="Specify start time in the format 'YYYY-MM-DDTH:M:SZ'")
+@click.option('--end', help="Specify end time in the format 'YYYY-MM-DDTH:M:SZ'")
+@click.option('--output', default="tsv", type=click.Choice(['tsv', 'json']), help="Specify Output format")
+def bins(bin_list, limit, start, end, output):
+    """
+    Retrieve a dump of all shop listings cards associated with a comma-delimited list of BINs
+    """
+    client = DTM(username, password)
+    doctypes = ["shop_listing"]
+    query = f'item_type:CC AND payment_card.partial_number_prefix:({bin_list.replace(",", " OR ")})'  # --- currency batch.name
+    if limit > 0:
+        resp = client.search_research_tools(query=query, limit=limit, doc_types=doctypes, since=start, until=end, truncate=None)
+    else:
+        resp = client.search_research_tools_all(query=query, doc_types=doctypes, since=start, until=end, truncate=None)
+    if output == "tsv":
+        print('timestamp\tBIN\tType\tBrand\tShop\tPrice\tCurrency')
+        for document in resp["docs"]:
+            print(f'{document["timestamp"]}\t{document["payment_card"]["partial_number_prefix"]}\t{document["payment_card"]["type"]}\t{document["payment_card"].get("brand","")}\t{document["shop"]["name"]}\t{document["price"]}\t{document["currency"]}')
+    elif output == "json":
+        print(dumps(resp, indent=4))

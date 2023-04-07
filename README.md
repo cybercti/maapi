@@ -194,9 +194,23 @@ Options:
   --help                   Show this message and exit.
 ```
 
+```
+Usage: dtm cards [OPTIONS] BIN_LIST
+
+  Retrieve a dump of all shop listings cards associated with a comma-delimited
+  list of BINs
+
+Options:
+  --limit INTEGER      Number of items to retrieve, use 0 to retrieve all.
+  --start TEXT         Specify start time in the format 'YYYY-MM-DDTH:M:SZ'
+  --end TEXT           Specify end time in the format 'YYYY-MM-DDTH:M:SZ'
+  --output [tsv|json]  Specify Output format
+  --help               Show this message and exit.
+```
+
 ### Examples
 
-Monitor related examples:
+#### Monitor related examples:
 
 Get a list of the monitors with corresponding statuses for each.
 ```
@@ -210,8 +224,7 @@ dtm monitor enable  --monitorid a9a9a9a9a9a9a9a9a9a9
 dtm monitor disable --monitorid a9a9a9a9a9a9a9a9a9a9
 ```
 
-Research Tools
-Search examples
+#### Research Tools Search examples
 
 ```
 dtm rtsearch ssh
@@ -223,4 +236,15 @@ Specify Different output options, default is `preview` view.
 ```
 dtm rtsearch ssh --limit 10 --doctypes message,paste --truncate 50 --output preview
 dtm rtsearch ssh --limit 10 --doctypes message,paste --truncate 50 --output json
+```
+
+#### Research Tools shop listing - payment cards downloads
+
+```
+dtm cards 372652,440348 --limit 25 --output tsv --start 2022-06-01T00:00:00Z --end 2022-06-02T00:00:00Z
+```
+
+Get all the cards in the time slot
+```
+dtm cards 372652,440348 --limit 0 --output tsv --start 2022-06-01T00:00:00Z --end 2022-06-02T00:00:00Z
 ```
