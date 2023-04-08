@@ -3,7 +3,7 @@ Helper functions to extract fields for tabular output.
 """
 
 
-def render_tsv_entry_shop_listing_cc_header():
+def render_tsv_entry_shop_listing_cc_header() -> str:
     """
     Return a header row for CC shop listing.
     """
@@ -14,7 +14,7 @@ def render_tsv_entry_shop_listing_cc_header():
         'Owner City\tOwner Region\tOwner Postal Code\tOwner Country Code'
     )
 
-def render_tsv_entry_shop_listing_cc(document):
+def render_tsv_entry_shop_listing_cc(document) -> str:
     """
     Return a row representation ot values, deliminited by tabs.
     """
