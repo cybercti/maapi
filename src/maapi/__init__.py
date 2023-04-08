@@ -5,7 +5,6 @@ import logging
 from time import time
 from os import path
 from json import dumps
-from ipaddress import ip_address
 
 # Third party imports
 from requests import Response, Session

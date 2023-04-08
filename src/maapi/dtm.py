@@ -143,7 +143,6 @@ class DTM(MAAPI):
         Get a list of alerts, optionally filtered by monitor_ids.
         """
         url = f"{self.host}/v4/dtm/alerts"
-        sort_enum = ["id", "created_at", "updated_at", "monitor_id"]
         if page:
             params = {"page": page}
         else:
