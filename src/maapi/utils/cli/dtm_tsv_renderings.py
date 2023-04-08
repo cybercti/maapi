@@ -4,6 +4,9 @@ Helper functions to extract fields for tabular output.
 
 
 def render_tsv_entry_shop_listing_cc_header():
+    """
+    Return a header row for CC shop listing.
+    """
     return (
         'timestamp\tBIN\tType\tBrand\tIssuer\tShop\tPrice\tCurrency\tQuantity\tExpiry Date\tService Code\tBatch\tTrack1 Available\tTrack2 Available\t'
         'Name Available\tDOB Available\tSSN Available\tPhone Available\tOwner Name\tOwner Phone\tOwner Street Address\t'
@@ -11,6 +14,9 @@ def render_tsv_entry_shop_listing_cc_header():
     )
 
 def render_tsv_entry_shop_listing_cc(document):
+    """
+    Return a row representation ot values, deliminited by tabs.
+    """
     return (
         f'{document["timestamp"]}\t'
         f'{document["payment_card"].get("partial_number_prefix","")}\t'
