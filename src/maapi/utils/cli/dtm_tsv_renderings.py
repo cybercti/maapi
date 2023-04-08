@@ -8,7 +8,7 @@ def render_tsv_entry_shop_listing_cc_header():
     Return a header row for CC shop listing.
     """
     return (
-        'timestamp\tShop\tBIN\tType\tBrand\tIssuer\tProduct\tPrice\tCurrency\tQuantity\tExpiry Date\tService Code\tBatch\tTrack1 Available\tTrack2 Available\t'
+        'timestamp\tShop\tBIN\tFull Number\tType\tBrand\tIssuer\tProduct\tPrice\tCurrency\tQuantity\tExpiry Date\tService Code\tBatch\tTrack1 Available\tTrack2 Available\t'
         'Name Available\tDOB Available\tSSN Available\tPhone Available\tOwner Name\tOwner Phone\tOwner Street Address\t'
         'Owner City\tOwner Region\tOwner Postal Code\tOwner Country Code'
     )
@@ -21,6 +21,7 @@ def render_tsv_entry_shop_listing_cc(document):
         f'{document["timestamp"]}\t'
         f'{document["shop"].get("name")}\t'
         f'{document["payment_card"].get("partial_number_prefix","")}\t'
+        f'{document["payment_card"].get("full_number","")}\t'
         f'{document["payment_card"].get("type","")}\t'
         f'{document["payment_card"].get("brand","")}\t'
         f'{document["payment_card"].get("issuer","")}\t'
