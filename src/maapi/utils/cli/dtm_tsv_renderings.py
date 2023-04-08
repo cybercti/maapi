@@ -8,8 +8,9 @@ def render_tsv_entry_shop_listing_cc_header():
     Return a header row for CC shop listing.
     """
     return (
-        'timestamp\tShop\tBIN\tFull Number\tType\tBrand\tIssuer\tProduct\tPrice\tCurrency\tQuantity\tExpiry Date\tService Code\tBatch\tTrack1 Available\tTrack2 Available\t'
-        'Name Available\tDOB Available\tSSN Available\tPhone Available\tOwner Name\tOwner Phone\tOwner Street Address\t'
+        'timestamp\tShop\tBIN\tFull Number\tType\tBrand\tIssuer\tProduct\tPrice\tCurrency\tQuantity\tExpiry Date\t'
+        'Service Code\tBatch\tTrack1 Available\tTrack2 Available\tName Available\tDOB Available\tSSN Available\t'
+        'Phone Available\tOwner Name\tOwner Phone\tOwner Street Address\t'
         'Owner City\tOwner Region\tOwner Postal Code\tOwner Country Code'
     )
 
