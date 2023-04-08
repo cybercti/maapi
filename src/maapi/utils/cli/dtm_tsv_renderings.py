@@ -10,7 +10,7 @@ def render_tsv_entry_shop_listing_cc_header():
     return (
         'timestamp\tBIN\tType\tBrand\tIssuer\tShop\tPrice\tCurrency\tQuantity\tExpiry Date\tService Code\tBatch\tTrack1 Available\tTrack2 Available\t'
         'Name Available\tDOB Available\tSSN Available\tPhone Available\tOwner Name\tOwner Phone\tOwner Street Address\t'
-        'Owner City\tOwner Region\tOwner Postal Code\tOwner Country'
+        'Owner City\tOwner Region\tOwner Postal Code\tOwner Country Code'
     )
 
 def render_tsv_entry_shop_listing_cc(document):
