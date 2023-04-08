@@ -3,13 +3,13 @@ Helper functions to extract fields for tabular output.
 """
 
 
-def _render_tsv_entry_shop_listing_cc_header():
+def render_tsv_entry_shop_listing_cc_header():
     return (
         'timestamp\tBIN\tType\tBrand\tIssuer\tShop\tPrice\tCurrency\tQuantity\tExpiry Date\tService Code\tBatch\tTrack1 Available\tTrack2 Available\t'
         'Name Available\tDOB Available\tSSN Available\tPhone Available\tOwner Name\tOwner Phone\tOwner Street Address\t'
         'Owner City\tOwner Region\tOwner Postal Code\tOwner Country'
     )
-def _render_tsv_entry_shop_listing_cc(document):
+def render_tsv_entry_shop_listing_cc(document):
     return (
         f'{document["timestamp"]}\t'
         f'{document["payment_card"].get("partial_number_prefix","")}\t'

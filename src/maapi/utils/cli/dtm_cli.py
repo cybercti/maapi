@@ -14,6 +14,7 @@ from maapi.dtm import DTM
 
 # Local Imports
 from .dtm_renderings import _render_preview
+from .dtm_tsv_renderings import render_tsv_entry_shop_listing_cc, render_tsv_entry_shop_listing_cc_header
 
 logger = logging.getLogger(__name__)
 username = environ['MAV4_USER']
@@ -139,8 +140,8 @@ def bins(bin_list, limit, start, end, output):
     else:
         resp = client.search_research_tools_all(query=query, doc_types=doctypes, since=start, until=end, truncate=None)
     if output == "tsv":
-        print('timestamp\tBIN\tType\tBrand\tShop\tPrice\tCurrency')
+        print(render_tsv_entry_shop_listing_cc_header())
         for document in resp["docs"]:
-            print(f'{document["timestamp"]}\t{document["payment_card"]["partial_number_prefix"]}\t{document["payment_card"]["type"]}\t{document["payment_card"].get("brand","")}\t{document["shop"]["name"]}\t{document["price"]}\t{document["currency"]}')
+            print(render_tsv_entry_shop_listing_cc(document))
     elif output == "json":
         print(dumps(resp, indent=4))
