@@ -71,6 +71,17 @@ def print_monitor_list(items) -> None:
         print(f"  {item['id']}   {statuses}     {item['name']}")
 
 
+def retrieve_bins_from_file(filename:str) -> str:
+    """
+    Retrieve a list of BINs from a file and returns a comma delimited version of them.
+    """
+    with open(filename, "r", encoding="utf-8") as bin_file:
+        bin_list = bin_file.read().replace('\n', ',')
+        while bin_list[-1:] == ',': # Remove any trailing commas/new-lines
+            bin_list = bin_list[:-1]
+    return bin_list
+
+
 @dtm.command('monitor')
 @click.argument('command', type=click.Choice(['list', 'enable', 'disable']))
 @click.option('--limit', default=0, help="Number of items to retrieve, 0 for unlimited.")
@@ -128,13 +139,17 @@ def rtsearch(query, limit, doctypes, start, end, truncate, output):
 @click.option('--start', help="Specify start time in the format 'YYYY-MM-DDTH:M:SZ'")
 @click.option('--end', help="Specify end time in the format 'YYYY-MM-DDTH:M:SZ'")
 @click.option('--output', default="tsv", type=click.Choice(['tsv', 'json']), help="Specify Output format")
-def bins(bin_list, limit, start, end, output):
+@click.option("--usefile", is_flag=True, show_default=True, default=False,
+    help="If enabled, bin_list is considered a file in which to read, one line per BIN.")
+def bins(bin_list, limit, start, end, output,usefile):
     """
     Retrieve a dump of all shop listings cards associated with a comma-delimited list of BINs
     """
     client = DTM(username, password)
     doctypes = ["shop_listing"]
-    query = f'item_type:CC AND payment_card.partial_number_prefix:({bin_list.replace(",", " OR ")})'  # --- currency batch.name
+    if usefile:
+        bin_list = retrieve_bins_from_file(bin_list)
+    query = f'item_type:CC AND payment_card.partial_number_prefix:({bin_list.replace(",", " OR ")})'
     if limit > 0:
         resp = client.search_research_tools(query=query, limit=limit, doc_types=doctypes, since=start, until=end, truncate=None)
     else:
