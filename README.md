@@ -1,4 +1,4 @@
-# mav4
+# MA API v4 Client
 MA API
 
 Unofficial and experimental python client for the Mandiant Advantage platform, starting with the Threat Intelligence endpoints.
@@ -201,13 +201,16 @@ Usage: dtm cards [OPTIONS] BIN_LIST
   list of BINs
 
 Options:
-  --limit INTEGER      Number of items to retrieve, use 0 to retrieve all.
-  --start TEXT         Specify start time in the format 'YYYY-MM-DDTH:M:SZ'
-  --end TEXT           Specify end time in the format 'YYYY-MM-DDTH:M:SZ'
-  --output [tsv|json]  Specify Output format
-  --usefile            If enabled, bin_list is considered a file in which to
-                       read, one line per BIN.
-  --help               Show this message and exit.
+  --start TEXT               Specify start time in the format 'YYYY-MM-
+                             DDTH:M:SZ'
+  --end TEXT                 Specify end time in the format 'YYYY-MM-
+                             DDTH:M:SZ'
+  --output [tsv|json|jsonl]  Specify Output format
+  --usefile                  If enabled, bin_list is considered a file in
+                             which to read, one line per BIN.
+  --pagecount INTEGER        Number of pages to retrieve, use 0 to retrieve
+                             all.
+  --help                     Show this message and exit.
 ```
 
 ### Examples

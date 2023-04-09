@@ -217,7 +217,24 @@ class DTM(MAAPI):
             kwargs["page"] = next_page
         return {"docs": results}
 
-    def get_document(self, doc_id, doc_type, refs=False, truncate=None, sanitize=True):
+    def search_research_tools_iter(self, page_count:int=1, * args, ** kwargs) -> Dict:
+        """
+        Get all the search results for a given query or timeframe.
+        """
+        resp = self.search_research_tools(* args, ** kwargs)
+        next_page = resp.get("_maapi", {}).get("next_page", None)
+        # NOTE: This is needed since the search endpoint always expects a query, even with a page reference. Otherwise 415 HTTP error
+        kwargs["page"] = next_page
+        yield resp["docs"]
+        page_count -= 1
+        while next_page and page_count:
+            resp = self.search_research_tools(* args, ** kwargs)
+            yield resp["docs"]
+            page_count -= 1
+            next_page = resp.get("_maapi", {}).get("next_page", None)
+            kwargs["page"] = next_page
+
+    def get_document(self, doc_id, doc_type, refs=False, truncate=None, sanitize=True) -> Dict:
         """
         Retrieve document by doc_id and doc_type.
         Options to include the entities and classifiations (refs), optionally truncate the text and sanitize the HTML.

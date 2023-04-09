@@ -109,7 +109,7 @@ def monitor(command, limit, monitorid):
 
 @dtm.command('rtsearch')
 @click.argument('query')
-@click.option('--limit', default=50, help="Number of items to retrieve")
+@click.option('--limit', default=25, help="Number of items to retrieve")
 @click.option('--doctypes', help="List of document types to filter on, separated by commas.")
 @click.option('--start', help="Specify start time in the format 'YYYY-MM-DDTH:M:SZ'")
 @click.option('--end', help="Specify end time in the format 'YYYY-MM-DDTH:M:SZ'")
@@ -135,13 +135,13 @@ def rtsearch(query, limit, doctypes, start, end, truncate, output):
 
 @dtm.command('cards')
 @click.argument('bin_list') # , help="List of BINs to filter on, separated by commas."
-@click.option('--limit', default=25, help="Number of items to retrieve, use 0 to retrieve all.")
 @click.option('--start', help="Specify start time in the format 'YYYY-MM-DDTH:M:SZ'")
 @click.option('--end', help="Specify end time in the format 'YYYY-MM-DDTH:M:SZ'")
-@click.option('--output', default="tsv", type=click.Choice(['tsv', 'json']), help="Specify Output format")
+@click.option('--output', default="tsv", type=click.Choice(['tsv', 'json', 'jsonl']), help="Specify Output format")
 @click.option("--usefile", is_flag=True, show_default=True, default=False,
     help="If enabled, bin_list is considered a file in which to read, one line per BIN.")
-def bins(bin_list, limit, start, end, output,usefile):
+@click.option('--pagecount', default=1, help="Number of pages to retrieve, use 0 to retrieve all.")
+def bins(bin_list, start, end, output, usefile, pagecount):
     """
     Retrieve a dump of all shop listings cards associated with a comma-delimited list of BINs
     """
@@ -150,13 +150,18 @@ def bins(bin_list, limit, start, end, output,usefile):
     if usefile:
         bin_list = retrieve_bins_from_file(bin_list)
     query = f'item_type:CC AND payment_card.partial_number_prefix:({bin_list.replace(",", " OR ")})'
-    if limit > 0:
-        resp = client.search_research_tools(query=query, limit=limit, doc_types=doctypes, since=start, until=end, truncate=None)
-    else:
-        resp = client.search_research_tools_all(query=query, doc_types=doctypes, since=start, until=end, truncate=None)
+    results_gen = client.search_research_tools_iter(page_count=pagecount, query=query, doc_types=doctypes, since=start, until=end, truncate=None)
     if output == "tsv":
         print(render_tsv_entry_shop_listing_cc_header())
-        for document in resp["docs"]:
-            print(render_tsv_entry_shop_listing_cc(document))
+        for documents in results_gen:
+            for document in documents: # Results are in batches
+                print(render_tsv_entry_shop_listing_cc(document))
+    elif output == "jsonl":
+        for documents in results_gen:
+            for document in documents: # Results are in batches
+                print(dumps(document))
     elif output == "json":
-        print(dumps(resp, indent=4))
+        results = []
+        for documents in results_gen:
+            results += documents
+        print(dumps({"docs": results}, indent=4))
