@@ -205,6 +205,8 @@ Options:
   --start TEXT         Specify start time in the format 'YYYY-MM-DDTH:M:SZ'
   --end TEXT           Specify end time in the format 'YYYY-MM-DDTH:M:SZ'
   --output [tsv|json]  Specify Output format
+  --usefile            If enabled, bin_list is considered a file in which to
+                       read, one line per BIN.
   --help               Show this message and exit.
 ```
 
