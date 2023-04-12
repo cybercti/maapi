@@ -246,12 +246,12 @@ dtm rtsearch ssh --limit 10 --doctypes message,paste --truncate 50 --output json
 #### Research Tools shop listing - payment cards downloads
 
 ```
-dtm cards 372652,440348 --limit 25 --output tsv --start 2022-06-01T00:00:00Z --end 2022-06-02T00:00:00Z
+dtm cards 372652,440348 --pagecount 1 --output tsv --start 2022-06-01T00:00:00Z --end 2022-06-02T00:00:00Z
 ```
 
 Get all the cards in the time slot
 ```
-dtm cards 372652,440348 --limit 0 --output tsv --start 2022-06-01T00:00:00Z --end 2022-06-02T00:00:00Z
+dtm cards 372652,440348 --pagecount 0 --output tsv --start 2022-06-01T00:00:00Z --end 2022-06-02T00:00:00Z
 ```
 
 Load the BINs from a text file rather than passing on the command line.
