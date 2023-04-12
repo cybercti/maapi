@@ -10,7 +10,7 @@ def render_tsv_entry_shop_listing_cc_header() -> str:
     return (
         'timestamp\tShop\tBIN\tFull Number\tType\tBrand\tIssuer\tProduct\tPrice\tCurrency\tQuantity\tExpiry Date\t'
         'Service Code\tBatch\tTrack1 Available\tTrack2 Available\tName Available\tDOB Available\tSSN Available\t'
-        'Phone Available\tOwner Name\tOwner Phone\tOwner Street Address\t'
+        'Phone Available\tOwner Name\tOwner Last Name\tOwner First Name\tOwner Phone\tOwner Street Address\t'
         'Owner City\tOwner Region\tOwner Postal Code\tOwner Country Code'
     )
 
@@ -40,6 +40,8 @@ def render_tsv_entry_shop_listing_cc(document) -> str:
         f'{document.get("data_availability",{}).get("ssn_available","")}\t'
         f'{document.get("data_availability",{}).get("phone_available","")}\t'
         f'{document["payment_card"].get("owner",{}).get("identity",{}).get("name","")}\t'
+        f'{document["payment_card"].get("owner",{}).get("identity",{}).get("last_name","")}\t'
+        f'{document["payment_card"].get("owner",{}).get("identity",{}).get("first_name","")}\t'
         f'{document["payment_card"].get("owner",{}).get("contact",{}).get("phone","")}\t'
         f'{document["payment_card"].get("owner",{}).get("contact",{}).get("geo_location",{}).get("street_address","")}\t'
         f'{document["payment_card"].get("owner",{}).get("contact",{}).get("geo_location",{}).get("city","")}\t'
