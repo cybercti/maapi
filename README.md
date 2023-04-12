@@ -256,5 +256,5 @@ dtm cards 372652,440348 --pagecount 0 --output tsv --start 2022-06-01T00:00:00Z 
 
 Load the BINs from a text file rather than passing on the command line.
 ```
-dtm cards --limit 10 --output tsv --start 2023-01-01T00:00:00Z --end 2023-01-15T00:00:00Z --usefile ~/Downloads/mybins.txt
+dtm cards --pagecount 1 --output tsv --start 2023-01-01T00:00:00Z --end 2023-01-15T00:00:00Z --usefile ~/Downloads/mybins.txt
 ```
