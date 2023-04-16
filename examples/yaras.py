@@ -6,7 +6,7 @@ from json import dumps
 from maapi.mati import MAV4
 
 
-logging.basicConfig(filename=None, encoding='utf-8', level=logging.WARNING)
+logging.basicConfig(filename=None, encoding='utf-8', level=logging.DEBUG)
 
 username = environ['MAV4_USER']
 password = environ['MAV4_PASS']
@@ -16,3 +16,10 @@ if __name__ == "__main__":
     client = MAV4(username, password)
     yaras = client.get_yara(malware_id=malware_id)
     print(dumps(yaras, indent=4))
+    # And get 10(ish) more
+    malwares = client.get_items("malware", limit=10)
+    for malware in malwares["malware"]:
+        if malware["has_yara"]:
+            yaras = client.get_yara(malware_id=malware["id"])
+            print(dumps(yaras["signatures"], indent=4))
+
