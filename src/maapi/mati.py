@@ -92,6 +92,25 @@ class MAV4(MAAPI):
         response = self._http_get(url=url)
         return response.json()
 
+    def get_malware_reports(self, malware_id):
+        """
+        Return the reports associated with malware_id
+        """
+        url = f"{self.host}/v4/malware/{malware_id}/reports"
+        response = self._http_get(url=url)
+        return response.json()
+
+    def get_yara(self, malware_id):
+        """
+        Return the Yara signatures associated with malware_id
+        """
+        url = f"{self.host}/endpoints/yara"
+        params = {
+            "malware_id": malware_id
+        }
+        response = self._http_get(url=url, params=params)
+        return response.json()
+
     def id_lookup(self, value, item_type=None, loose_match=False):
         """
         Searches for a given value, returning the id of the first result.
