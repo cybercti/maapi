@@ -103,12 +103,18 @@ class MAV4(MAAPI):
     def get_yara(self, malware_id):
         """
         Return the Yara signatures associated with malware_id
+        Note: This is using an undocumented API, subject to change/breaking.
         """
         url = f"{self.host}/endpoints/yara"
         params = {
             "malware_id": malware_id
         }
         response = self._http_get(url=url, params=params)
+        if response.status_code == 204:
+            logger.info("Fix-up for HTTP 204, yara sigs for %s are %s", malware_id, response.text)
+            return {"signatures": []}
+        elif response.status_code != 200:
+            logger.error("For %s , received an unexpected response code %s and text of %s", malware_id, response.status_code, response.text) # TODO: Raise a (custom) exception.
         return response.json()
 
     def id_lookup(self, value, item_type=None, loose_match=False):
