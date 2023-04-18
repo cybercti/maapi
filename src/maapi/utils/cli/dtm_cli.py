@@ -140,8 +140,10 @@ def rtsearch(query, limit, doctypes, start, end, truncate, output):
 @click.option('--output', default="tsv", type=click.Choice(['tsv', 'json', 'jsonl']), help="Specify Output format")
 @click.option("--usefile", is_flag=True, show_default=True, default=False,
     help="If enabled, bin_list is considered a file in which to read, one line per BIN.")
+@click.option("--exactmatch", is_flag=True, show_default=True, default=False,
+    help="If enabled, bin_list will match exactly on the BIN instead of a prefix, BIN*.")
 @click.option('--pagecount', default=1, help="Number of pages to retrieve, use 0 to retrieve all.")
-def bins(bin_list, start, end, output, usefile, pagecount):
+def bins(bin_list, start, end, output, usefile, exactmatch, pagecount):
     """
     Retrieve a dump of all shop listings cards associated with a comma-delimited list of BINs
     """
@@ -149,7 +151,10 @@ def bins(bin_list, start, end, output, usefile, pagecount):
     doctypes = ["shop_listing"]
     if usefile:
         bin_list = retrieve_bins_from_file(bin_list)
-    query = f'item_type:CC AND payment_card.partial_number_prefix:({bin_list.replace(",", " OR ")})'
+    if exactmatch:
+        query = f'item_type:CC AND payment_card.partial_number_prefix:({bin_list.replace(",", " OR ")})'
+    else: # Add an asterisk to the end of each BIN.
+        query = f'item_type:CC AND payment_card.partial_number_prefix:({bin_list.replace(",", "* OR ")}*)'
     results_gen = client.search_research_tools_iter(page_count=pagecount, query=query, doc_types=doctypes, since=start, until=end, truncate=None)
     if output == "tsv":
         print(render_tsv_entry_shop_listing_cc_header())

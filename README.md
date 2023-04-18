@@ -208,6 +208,8 @@ Options:
   --output [tsv|json|jsonl]  Specify Output format
   --usefile                  If enabled, bin_list is considered a file in
                              which to read, one line per BIN.
+  --exactmatch               If enabled, bin_list will match exactly on the
+                             BIN instead of a prefix, BIN*.
   --pagecount INTEGER        Number of pages to retrieve, use 0 to retrieve
                              all.
   --help                     Show this message and exit.
