@@ -116,6 +116,34 @@ class DTM(MAAPI):
         """
         return self._update_monitor_statuses(monitor_id, enabled=False)
 
+    def create_monitor(self, name, description, query, enabled=False, email_notify_enabled=None, email_notify_immediate=None) -> Dict:
+        """
+        Creates a new monitor, optionally enabling it.
+        """
+        queries = [query]
+        doc_condition = {
+            "topic": "match_conditions",
+            "operator": "all",
+            "match": [
+                {
+                    "topic": "lucene",
+                    "operator": "all",
+                    "match": queries
+                }
+            ]
+        }
+        data = {
+            "name": name,
+            "description": description,
+            "doc_condition": doc_condition,
+            "email_notify_enabled": email_notify_enabled,
+            "email_notify_immediate": email_notify_immediate,
+            "enabled": enabled,
+        }
+        url = f"{self.host}/v4/dtm/monitors"
+        response = self._http_post(url=url, json=data)
+        return response.json()
+
     def get_alert(self, alert_id:str, truncate:int=None, sanitize:str="true") -> Dict:
         """
         Get the details of a given alert_id, optionally truncating or sanitizing.

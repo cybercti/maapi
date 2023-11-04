@@ -83,10 +83,14 @@ def retrieve_bins_from_file(filename:str) -> str:
 
 
 @dtm.command('monitor')
-@click.argument('command', type=click.Choice(['list', 'enable', 'disable']))
+@click.argument('command', type=click.Choice(['list', 'enable', 'disable', 'create']))
 @click.option('--limit', default=0, help="Number of items to retrieve, 0 for unlimited.")
 @click.option('--monitorid', help="Monitor ID to change.")
-def monitor(command, limit, monitorid):
+@click.option('--name', help="Name of monitor used when creating a new monitor.")
+@click.option('--description', help="Description of monitor used when creating a new monitor, otherwise uses creation uses 'name'")
+@click.option('--query', help="Lucene Query used when creating a new monitor.")
+@click.option('--enabled/--disabled', default=False, help="Upon creating a monitor, create it as enabled or disabled.")
+def monitor(command, limit, monitorid, name, description, query, enabled):
     """
     Monitor related functionality
     """
@@ -106,6 +110,14 @@ def monitor(command, limit, monitorid):
             get_print_monitors(client, limit=1, monitor_id=monitorid)
         else:
             print("--monitorid required when enabling or disabling a monitor")
+    elif command == 'create':
+        if name and query:
+            if not description:
+                description = name
+            new_monitor = client.create_monitor(name, description, query, enabled=enabled)
+            print_monitor_list([new_monitor])
+        else:
+            print("--name and --query required when creating a monitor")
 
 @dtm.command('rtsearch')
 @click.argument('query')

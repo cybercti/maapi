@@ -166,14 +166,20 @@ mati indicator 84b4c0f12c30cc06bf8ba85b148a2c466ede9943919b2fb6232b77f98c3039dd
 ## DTM Usage
 
 ```
-Usage: dtm monitor [OPTIONS] {list|enable|disable}
+Usage: dtm monitor [OPTIONS] {list|enable|disable|create}
 
   Monitor related functionality
 
 Options:
-  --limit INTEGER   Number of items to retrieve, 0 for unlimited.
-  --monitorid TEXT  Monitor ID to change.
-  --help            Show this message and exit.
+  --limit INTEGER         Number of items to retrieve, 0 for unlimited.
+  --monitorid TEXT        Monitor ID to change.
+  --name TEXT             Name of monitor used when creating a new monitor.
+  --description TEXT      Description of monitor used when creating a new
+                          monitor, otherwise uses creation uses 'name'
+  --query TEXT            Lucene Query used when creating a new monitor.
+  --enabled / --disabled  Upon creating a monitor, create it as enabled or
+                          disabled.
+  --help                  Show this message and exit.
 ```
 
 ```
@@ -229,6 +235,11 @@ Enable or disable a monitor
 ```
 dtm monitor enable  --monitorid a9a9a9a9a9a9a9a9a9a9
 dtm monitor disable --monitorid a9a9a9a9a9a9a9a9a9a9
+```
+
+Create a monitor
+```
+dtm monitor create --name "Coordination" --description "Forces in the wild working together." --query "Good AND Evil" --enabled
 ```
 
 #### Research Tools Search examples
